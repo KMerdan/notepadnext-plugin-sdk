@@ -1,17 +1,17 @@
-# 三仓边界和兼容性
+# 三仓边界和版本
 
-| 仓库 | 维护内容 | 版本来源 |
+| 仓库 | 维护内容 | 版本/依赖 |
 | --- | --- | --- |
-| `KMerdan/notepad-next-plus-plus` | Qt/C++ 主应用、JSON-RPC 服务、Node/Python 插件宿主、VS Code 运行时适配器、安装/更新、原生集成测试 | 应用版本；SDK 子模块固定 commit |
-| `KMerdan/notepadnext-plugin-sdk` | API 类型、共享 metadata Schema、静态兼容性契约、模板、调试/测试工具、服务 helper、打包和 SDK 文档 | SDK SemVer tag 和 `.tgz` Release |
-| `KMerdan/notepadnext-markdown-preview` | 官方目录、Markdown/HTML 插件源码、独立 lockfile、插件 ZIP Release | 各自 `<plugin-id>/v<version>` |
+| `KMerdan/notepad-next-plus-plus` | Qt/Scintilla 功能、原生操作、RPC 实现、Node/Python host、管理器、热更新与真实集成验证 | 应用版本；SDK submodule 固定 commit |
+| `KMerdan/notepadnext-plugin-sdk` | 原生/旧 API 类型、metadata/wire Schema、模板、调试/模拟测试、HTTP service helper、打包和文档 | SDK 0.2.0；Git tag 和 npm-format `.tgz` |
+| `KMerdan/notepadnext-markdown-preview` | 第一方插件源码、目录、独立 lockfile 与 Release | 各插件 `<plugin-id>/v<version>` |
 
-SDK 是 SDK 源码唯一维护位置。应用使用子模块，不复制编辑整个 SDK；Marketplace 使用精确 Release URL 和 npm lockfile integrity，不维护 vendored SDK 源码。生成的第三方模板可保留离线 SDK 快照，但其更新仍来自 SDK 官方版本。
+SDK 源码只在独立仓库维护。主应用通过 submodule 引用经过测试的 commit，并将规范 Schema 快照同步入应用；安装的 host 不加载整个 SDK。Marketplace 通过固定 Release URL 和 npm lockfile integrity 引用开发依赖，构建包只携带必要 runtime helper。作者生成的模板可保留离线 SDK 快照。
 
-应用中的 JSON-RPC transport 和宿主实现留在应用仓库。SDK 类型/Schema 描述公开契约；变更契约需 SDK 测试及应用集成验证共同通过。SDK 包版本与宿主 API 版本不同：当前 SDK 0.1.3 对应 API 0.1.x，不强迫插件、目录或应用版本同步递增。
+SDK 0.2.0 同时提供 legacy API 0.1 类型和 native API 0.2 类型。manifest API range 决定会话协商；已有 `^0.1.0` 包保留旧回调签名，`^0.2.0` 包收到固定目标 invocation。wire profile 仍为 0.1（JSON-RPC 2.0）；应用/SDK/插件/catalog 版本独立。
 
-VS Code 导入器只读取、验证和复制已经构建的扩展。它不导入运行时适配器，也不执行扩展入口。静态 configuration 定义解析留在 SDK `compat/configuration.cjs`；宿主打包该同一模块并保留自身 runtime Error/API 行为。
+VS Code importer 的历史实验位于 `experimental`；其 static configuration parser 不进入原生 SDK 客户端依赖。应用中历史 adapter 自带该实验契约。原生插件的目标是增强现有 Notepad Next ++，可以参考和移植其他编辑器插件源码，但不承诺通用 VS Code API/runtime 兼容。
 
-更新顺序：先修改 SDK → 单元和独立 tarball 验证 → 发布新 SDK → 主应用升级子模块并检查 Schema/宿主行为 → 官方插件升级明确的 SDK URL、刷新 lockfile、验证并按需发布插件版本。仅升级构建依赖不修改已经公开的插件包。
+升级顺序：SDK 实现与类型/独立包测试 → 应用原生行为验证 → SDK commit/tag/Release → 应用固定该 commit 并同步快照 → Marketplace 升级固定 URL/lockfiles、重建验证 → 有 runtime 改动时发布新插件版本。公开资产不可覆盖。
 
-Marketplace 暂时保留原仓库 URL：安装器将仓库视为更新信任来源，已有 Markdown 关联数据也按该来源隔离。未来改名需先实现并验证来源迁移；无需为改仓库名字中断现有安装。
+Marketplace 保留原 URL，以维持已安装 Markdown 的信任来源和插件数据。名称为 Official Plugin Marketplace，对本 fork 官方；与上游无官方关联。GPL-3.0-or-later 及上游声明保留。

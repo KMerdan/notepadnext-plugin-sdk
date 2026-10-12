@@ -1,3 +1,7 @@
+# API 0.1 参考（兼容已有插件）
+
+SDK 0.2.0 同时保留此旧契约。新的固定目标命令、选区和 core 接口见 [Native API 0.2](NativeAPI.zh-CN.md)；这里的命令回调仍使用原来的 positional args。
+
 # API 与 metadata
 
 完整 API 以 [index.d.ts](../index.d.ts) 为准。SDK 0.1.0 对应宿主 API 0.1.x；开发工具版本与 metadata 的宿主 API 范围分别管理。宿主通过 `activate(context)` 注入 API，插件不需要自行处理 JSON-RPC。

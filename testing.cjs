@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 'use strict';
 const {randomUUID}=require('node:crypto'),{isDeepStrictEqual}=require('node:util');
-function createTestHost({pluginId='tests.plugin',capabilities=[],text='',document={},onRender=()=>{}}={}) {
+function createTestHost({pluginId='tests.plugin',capabilities=[],text='',document={},apiVersion='0.1.0',onRender=()=>{}}={}) {
+  const stopping=new AbortController();let selectionRevision=1;
   let active=false,closed=false,plugin,sequence=0,buffer=text;
   let info={documentId:'test-document',uri:'file:///test/example.md',languageId:'markdown',version:1,isDirty:true,isReadonly:false,...document};
   const commands=new Map(),watches=new Set(),resources=new Set(),panels=new Map(),messages=[],restorers=new Map();
@@ -21,16 +22,29 @@ function createTestHost({pluginId='tests.plugin',capabilities=[],text='',documen
     };
   }
   const context={
-    pluginId,sessionId:randomUUID(),generation:1,subscriptions:[],capabilities:Object.freeze([...capabilities]),
+    pluginId,sessionId:randomUUID(),generation:1,subscriptions:[],stopping:stopping.signal,host:{apiVersion,supports:cap=>capabilities.includes(cap)},log:console,capabilities:Object.freeze([...capabilities]),
     commands:{async register(id,callback){assertOpen();if(commands.has(id))throw new Error('Command already registered: '+id);commands.set(id,callback);return own(()=>commands.delete(id));}},
     window:{async showMessage(severity,message,items=[]){assertOpen();if(!active)throw new Error('Show messages from a command after activation.');messages.push({severity,message,items:[...items]});return items[0];}},
     documents:{
-      async getActive(){assertOpen();return {...info};},
+      async getActive(){assertOpen();return {...info};},async list(){return [{...info}];},async getInfo(id){if(id!==info.documentId)throw new Error('Unknown document.');return {...info};},
       async getSnapshot(id){assertOpen();if(id!==info.documentId)throw new Error('Unknown document.');return snapshot();},
       async watch(listener){assertOpen();watches.add(listener);return Object.assign(own(()=>watches.delete(listener)),{document:{...info},eventSeq:sequence});},
       async watchAll(){return unsupported('documents.watchAll');},
-      async applyEdits(){return unsupported('documents.applyEdits');}
+      async applyEdits(id,version,edits,options={}){
+        assertOpen();if(!active)throw new Error('Write after activation.');
+        if(id!==info.documentId||version!==info.version)throw Object.assign(new Error('VersionConflict'),{code:1001});
+        if(options.selectionGuard&&(options.selectionGuard.editorId!=='test-editor'||options.selectionGuard.revision!==selectionRevision))throw Object.assign(new Error('SelectionConflict'),{code:1011});
+        const offset=position=>{const lines=buffer.split('\n');if(position.line>=lines.length||position.character>lines[position.line].replace(/\r$/,'').length)throw new Error('Invalid position');return lines.slice(0,position.line).reduce((n,line)=>n+line.length+1,0)+position.character;};
+        const prepared=edits.map(edit=>({start:offset(edit.range.start),end:offset(edit.range.end),text:edit.text})).sort((a,b)=>a.start-b.start);
+        for(let n=0;n<prepared.length;n++)if(prepared[n].end<prepared[n].start||(n&&prepared[n].start<=prepared[n-1].end))throw new Error('Overlapping edits');
+        for(const edit of prepared.reverse())buffer=buffer.slice(0,edit.start)+edit.text+buffer.slice(edit.end);
+        info={...info,version:info.version+1,isDirty:true};++selectionRevision;return {version:info.version};
+      }
     },
+    editors:{async capture(invocation){assertOpen();if(invocation.editorId!=='test-editor'||invocation.documentId!==info.documentId)throw new Error('Unknown editor.');
+      const lines=buffer.split('\n'),end={line:lines.length-1,character:lines.at(-1).replace(/\r$/,'').length},start={line:0,character:0};
+      return {editor:{editorId:'test-editor',documentId:info.documentId,windowId:'test-window'},document:{...info},snapshot:snapshot(),selectedText:[buffer],selection:{editorId:'test-editor',documentId:info.documentId,documentVersion:info.version,revision:selectionRevision,mode:'stream',mainIndex:0,selections:[{range:{start,end},anchor:start,caret:end,anchorVirtualSpace:0,caretVirtualSpace:0}]}};
+    }},core:{async list(){return unsupported('core.list');},async execute(){return unsupported('core.execute');}},
     webviews:{
       registerRestorer(type,callback){restorers.set(type,callback);return {dispose:()=>restorers.delete(type)};},
       owner:'test-host',
@@ -57,14 +71,14 @@ function createTestHost({pluginId='tests.plugin',capabilities=[],text='',documen
   };
   const host={context,panels,messages,getSnapshot:snapshot,
     async activate(module){assertOpen();if(plugin)throw new Error('Test host has already activated a plugin.');plugin=module;await plugin.activate(context);active=true;},
-    async invoke(id,...args){assertOpen();if(!active)throw new Error('Plugin is not active.');if(!commands.has(id))throw new Error('Command is not registered: '+id);return commands.get(id)(...args);},
+    async invoke(id,...args){assertOpen();if(!active)throw new Error('Plugin is not active.');if(!commands.has(id))throw new Error('Command is not registered: '+id);return apiVersion==='0.2.0'?commands.get(id)({commandId:id,windowId:'test-window',editorId:'test-editor',documentId:info.documentId,args}):commands.get(id)(...args);},
     setDocument(value,metadata={}) {
       assertOpen();buffer=value;info={...info,...metadata,version:info.version+1,isDirty:true};
       const event={subscriptionId:'test-watch',eventSeq:++sequence,type:'contentInvalidated',document:{...info}};
       for(const listener of [...watches])listener(event);
     },
     async dispose() {
-      if(closed)return;
+      if(closed)return;stopping.abort();
       let failure;
       try{await plugin?.deactivate?.();}catch(error){failure=error;}
       active=false;

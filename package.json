@@ -1,6 +1,6 @@
 {
   "name": "@notepadnext/plugin-sdk",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Notepad Next ++ plugin SDK: types, contracts, templates, debugging and packaging",
   "types": "index.d.ts",
   "exports": {
@@ -18,6 +18,9 @@
       "types": "./local-service.d.ts",
       "require": "./local-service.cjs",
       "default": "./local-service.cjs"
+    },
+    "./native": {
+      "types": "./native.d.ts"
     }
   },
   "files": [
@@ -37,7 +40,8 @@
     "LICENSE",
     "local-service.cjs",
     "local-service.d.ts",
-    "compat"
+    "experimental",
+    "native.d.ts"
   ],
   "bin": {
     "nnp-create": "create.cjs",

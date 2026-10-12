@@ -29,7 +29,7 @@ async function main() {
   const sdkOutput=path.join(root,'sdk');await fs.mkdir(sdkOutput);
   const packed=JSON.parse(await run('01-sdk-pack',[npm,'pack','--json','--ignore-scripts','--pack-destination',sdkOutput],sdk))[0];
   const files=new Set(packed.files.map(item=>item.path));
-  for(const file of ['create.cjs','debug.cjs','testing.cjs','testing.d.ts','docs/MarkdownWalkthrough.zh-CN.md','schemas/manifest.schema.json','templates/markdown/src/index.ts','templates/hello/src/index.ts','templates/markdown/.vscode/launch.json'])assert.ok(files.has(file),'Missing SDK asset: '+file);
+  for(const file of ['create.cjs','debug.cjs','testing.cjs','testing.d.ts','native.d.ts','docs/MarkdownWalkthrough.zh-CN.md','schemas/manifest.schema.json','templates/markdown/src/index.ts','templates/hello/src/index.ts','templates/markdown/.vscode/launch.json'])assert.ok(files.has(file),'Missing SDK asset: '+file);
   assert.ok(!files.has('developer.test.cjs'));assert.ok(![...files].some(file=>file.includes('node_modules/')||file.startsWith('examples/')));
   const tooling=path.join(root,'tooling');await fs.mkdir(tooling);
   await fs.writeFile(path.join(tooling,'package.json'),JSON.stringify({private:true,dependencies:{'@notepadnext/plugin-sdk':'file:../sdk/'+packed.filename}},null,2));
@@ -74,6 +74,12 @@ async function main() {
   await run('20-html-test',[npm,'test'],html);
   await run('21-html-package',[npm,'run','package','--',path.join(artifacts,'html-preview-0.1.0')],html);
   assert.ok((await fs.stat(path.join(artifacts,'html-preview-0.1.0/dist/local-service.cjs'))).isFile());
+  const native=path.join(root,'native-text-tools');
+  await run('24-create-native',[create,native,'--template','text-tools','--id','demo.text-tools'],tooling);
+  await run('25-native-install',[npm,'install',...npmOptions],native);
+  await run('26-native-build',[npm,'run','build'],native);
+  await run('27-native-test',[npm,'test'],native);
+  await run('28-native-package',[npm,'run','package','--',path.join(artifacts,'text-tools-0.1.0')],native);
   const fixture=path.join(root,'built-vscode');await fs.mkdir(path.join(fixture,'out'),{recursive:true});
   await fs.writeFile(path.join(fixture,'package.json'),JSON.stringify({name:'hello',publisher:'demo',version:'1.0.0',engines:{vscode:'^1.80.0'},main:'./out/extension.js',contributes:{commands:[{command:'hello.open',title:'Hello'}],configuration:{properties:{'hello.greeting':{type:'string',default:'Hi'}}}}}));
   await fs.writeFile(path.join(fixture,'out/extension.js'),"exports.activate=()=>{throw new Error('import must never run code');};");await fs.writeFile(path.join(fixture,'LICENSE'),'MIT test fixture');

@@ -25,5 +25,6 @@ export function createTestHost(options?:{
   capabilities?:string[];
   text?:string;
   document?:Partial<DocumentInfo>;
+  apiVersion?:'0.1.0'|'0.2.0';
   onRender?:(panel:TestPanel)=>void;
 }):TestHost;

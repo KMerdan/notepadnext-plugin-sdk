@@ -1,0 +1,55 @@
+{
+  "manifestVersion": 1,
+  "id": "__PLUGIN_ID__",
+  "name": "Text Tools",
+  "version": "0.1.0",
+  "list": false,
+  "description": "Compose native editor operations and guarded selection transforms.",
+  "engines": {
+    "notepadnext": ">=0.15.0 <0.16.0",
+    "api": "^0.2.0"
+  },
+  "runtime": {
+    "kind": "node",
+    "entry": "dist/index.js"
+  },
+  "capabilities": {
+    "required": [
+      "commands@1",
+      "messages@1",
+      "documents.read@1",
+      "documents.write@1",
+      "editors.selection.read@1",
+      "core.commands@1"
+    ],
+    "optional": []
+  },
+  "activationEvents": [
+    "onCommand:__PLUGIN_ID__.uppercase",
+    "onCommand:__PLUGIN_ID__.deduplicate"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "id": "__PLUGIN_ID__.uppercase",
+        "title": "Uppercase selection"
+      },
+      {
+        "id": "__PLUGIN_ID__.deduplicate",
+        "title": "Remove duplicate lines"
+      }
+    ],
+    "menus": [
+      {
+        "location": "plugins",
+        "command": "__PLUGIN_ID__.uppercase",
+        "order": 100
+      },
+      {
+        "location": "plugins",
+        "command": "__PLUGIN_ID__.deduplicate",
+        "order": 101
+      }
+    ]
+  }
+}

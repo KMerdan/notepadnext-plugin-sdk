@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os');
-const {configurationDefinitions}=require('./compat/configuration.cjs'),{importExtension}=require('./import-vscode.cjs');
+const {configurationDefinitions}=require('./experimental/vscode/configuration.cjs'),{importExtension}=require('./import-vscode.cjs');
 test('configuration contract validates defaults, bounds and overlapping keys without a host checkout',()=>{
   const definitions=configurationDefinitions({properties:{'hello.message':{type:'string',default:'Hi'},'hello.enabled':{type:'boolean'}}});
   assert.deepEqual(definitions.get('hello.message'),{type:'string',default:'Hi'});assert.deepEqual(definitions.get('hello.enabled'),{type:'boolean',default:false});

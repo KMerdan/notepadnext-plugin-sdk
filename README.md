@@ -1,30 +1,42 @@
 # Notepad Next ++ Plugin SDK
 
-The independent plugin development kit for [Notepad Next ++](https://github.com/KMerdan/notepad-next-plus-plus), maintained by KMerdan. Package name **`@notepadnext/plugin-sdk`**, version **0.1.3**; compatible host API remains **0.1.x**. Use **Node 24**. Plugin authors do not need a Qt compiler or the application repository.
+The native plugin development kit for [Notepad Next ++](https://github.com/KMerdan/notepad-next-plus-plus), maintained by KMerdan. **SDK 0.2.0**, Node **24**. Enhance the existing editor with text tools, previews and HTML/JS services. Plugin authors do not need Qt or the application source tree.
 
-This repository owns TypeScript API declarations, unified plugin/marketplace metadata schemas, templates, the simulated test host, local debugger, local HTTP service helper, package/release tools and the static VS Code importer contract. The application owns the actual Qt UI, JSON-RPC transport, runtime adapters, permissions and native integration tests. The [official marketplace](https://github.com/KMerdan/notepadnext-markdown-preview) owns the plugins and their separately versioned releases.
+The application implements the native services and owns plugin processes, permissions and panels. This repository owns the public API declarations, metadata/wire contracts, templates, test host and development/package tools. The [official Marketplace](https://github.com/KMerdan/notepadnext-markdown-preview) owns Markdown/HTML plugin sources and independent releases.
 
-The SDK was extracted with its existing Git history from the application. GPL-3.0-or-later and original copyright notices are retained. Third-party packages keep their own licenses.
+## Start here
 
-## Use a released kit
+| Goal | Guide |
+| --- | --- |
+| Create a plugin | [Getting started](docs/GettingStarted.zh-CN.md) |
+| Transform selections or call editor operations | [Native API 0.2](docs/NativeAPI.zh-CN.md), `text-tools` template |
+| Preview Markdown | [Development → debug → package → install](docs/MarkdownWalkthrough.zh-CN.md) |
+| Run an HTML/JS service | [HTML service](docs/HtmlService.zh-CN.md), `html-service` template |
+| Restore panels after updates | [Hot update lifecycle](docs/HotUpdate.zh-CN.md) |
+| Maintain releases | [Marketplace](docs/Marketplace.zh-CN.md), [repository boundaries](docs/RepositoryLayout.zh-CN.md) |
+| Maintain an existing API 0.1 plugin | [Legacy API reference](docs/API.zh-CN.md) |
 
-GitHub Releases distribute an npm-format `.tgz` and `sdk-checksums.json`. The package is not published to the npm registry; install its exact release URL into a tooling project:
+## Install the kit
+
+GitHub Releases provide an npm-format tarball and `sdk-checksums.json`; this package is not on the npm registry. Install an exact URL and commit your lockfile:
 
 ```sh
-npm install --save-dev --ignore-scripts https://github.com/KMerdan/notepadnext-plugin-sdk/releases/download/v0.1.3/notepadnext-plugin-sdk-0.1.3.tgz
-npx --no-install nnp-create ../my-markdown --template markdown --id yourname.markdown-preview --name "Markdown Preview"
-cd ../my-markdown
+npm install --save-dev --ignore-scripts https://github.com/KMerdan/notepadnext-plugin-sdk/releases/download/v0.2.0/notepadnext-plugin-sdk-0.2.0.tgz
+npx --no-install nnp-create ../my-tools --template text-tools --id yourname.text-tools
+cd ../my-tools
 npm install --ignore-scripts
 npm run build
 npm test
-npm run debug
+npm run package -- ../my-tools-package
 ```
 
-Templates include `hello`, `markdown` and `html-service`. Generated projects carry the exact SDK snapshot used to create them, for offline portability. Treat it as a pinned dependency rather than editing a second SDK source. The official marketplace consumes the release tarball directly through lockfiles with integrity checks.
+Templates: `hello`, `markdown`, `html-service`, `text-tools`. Generated projects retain an exact SDK snapshot for offline portability. The Marketplace instead consumes the released tarball directly; it carries no copy of SDK source.
 
-TS code uses `import type {PluginContext} from '@notepadnext/plugin-sdk'`; the host injects runtime objects through `activate(context)`. API declarations do not implement JSON-RPC for plugin authors. A locally simulated host does not establish native renderer or permission behavior.
+API 0.2 plugins import types from `@notepadnext/plugin-sdk/native` and declare `engines.api: ^0.2.0`. The root type export preserves API 0.1's positional command callbacks for existing Markdown/HTML plugins. SDK package version, host API profile, application and plugin versions are separate. No speculative B/C interfaces are exported as implemented APIs.
 
-## Develop the SDK
+Native plugins use `activate(context)`; the host supplies runtime objects. Capabilities restrict host RPC access; trusted Node plugins can still use Node filesystem/network APIs. This is not an operating-system sandbox. The retained [VS Code importer experiment](experimental/README.md) is optional historical tooling, outside the native SDK architecture.
+
+## Develop and verify the SDK
 
 ```sh
 git clone https://github.com/KMerdan/notepadnext-plugin-sdk.git
@@ -33,18 +45,10 @@ npm test
 npm run test:standalone
 ```
 
-SDK unit tests need no npm install. The standalone check packs the actual npm file whitelist, installs the tarball outside the source tree, generates/builds/debugs/packages all three templates and imports a built VS Code fixture, without an application checkout. Template build dependencies are installed with hooks disabled.
+Unit tests need no npm install. Standalone validation packs the actual file whitelist, installs it outside this repository and builds/tests/packages all four templates. Local services require loopback access; template dependencies are installed with hooks disabled. These simulations do not replace native Qt/RPC/undo/CSP tests in the application.
 
-`npm run release:kit -- ../sdk-assets v0.1.3` creates a new release directory. CI on `v<version>` tags tests the standalone package before creating a draft. Verify the tarball's identity, version, file list, size and SHA-256, then publish. Never replace an existing version. Plugin ZIP releases use the SDK's separate `nnp-release` tool.
+`npm run release:kit -- ../sdk-assets v0.2.0` creates a new output directory. Tag CI validates the package before creating a draft release. Verify and publish immutable assets; do not overwrite a version. Application schema snapshots are synchronized from its reviewed SDK submodule by `scripts/sync-plugin-sdk-contracts.py` in the application repository.
 
-## Documents
+## License and provenance
 
-- [Getting started](docs/GettingStarted.zh-CN.md)
-- [Markdown development → debug → package → install/update](docs/MarkdownWalkthrough.zh-CN.md)
-- [Debugging](docs/Debugging.zh-CN.md) and [API](docs/API.zh-CN.md)
-- [Hot updates and panel restoration](docs/HotUpdate.zh-CN.md)
-- [Node HTML/JS service](docs/HtmlService.zh-CN.md)
-- [Multi-plugin marketplace releases](docs/Marketplace.zh-CN.md)
-- [Repository boundaries and compatibility](docs/RepositoryLayout.zh-CN.md)
-
-The application's `packages/plugin-sdk` is a Git submodule pinned to a reviewed SDK commit. Its copy of the shared configuration contract is bundled during the application build; no whole SDK toolchain is needed by installed plugin processes. Metadata schema snapshots in application documentation are generated from this SDK and checked for drift.
+GPL-3.0-or-later; see [LICENSE](LICENSE). Extracted from NotepadNext / Notepad Next ++ with its Git history and original copyright notices retained. Upstream: [dail8859/NotepadNext](https://github.com/dail8859/NotepadNext). Third-party packages retain their licenses.
