@@ -6,18 +6,19 @@ const {createTestHost}=require('./testing.cjs');
 const {portable}=require('./pack.cjs');
 function parseArguments(args) {
   const directory=args.shift(),options={};
-  if(!directory||directory.startsWith('--'))throw new Error('Usage: nnp-debug <project> --input <markdown-file> --output <html-file> [--command <id>] [--watch]');
+  if(!directory||directory.startsWith('--'))throw new Error('Usage: nnp-debug <project> --input <markdown-file> --output <html-file> [--command <id>] [--api-version 0.1.0|0.2.0] [--watch]');
   while(args.length) {
     const flag=args.shift();
     if(flag==='--watch'&&!options.watch){options.watch=true;continue;}
-    const key={'--input':'input','--output':'output','--command':'command'}[flag];
+    const key={'--input':'input','--output':'output','--command':'command','--api-version':'apiVersion'}[flag];
     if(!key||Object.hasOwn(options,key)||!args.length||args[0].startsWith('--'))throw new Error('Invalid or repeated option: '+flag);
     options[key]=args.shift();
   }
   if(!options.input||!options.output)throw new Error('--input and --output are required.');
+  if(options.apiVersion!==undefined&&!['0.1.0','0.2.0'].includes(options.apiVersion))throw new Error('--api-version must be 0.1.0 or 0.2.0.');
   return {directory,options};
 }
-async function runDebug(directory,{input,output,command,watch=false}) {
+async function runDebug(directory,{input,output,command,watch=false,apiVersion='0.1.0'}) {
   directory=await fs.realpath(directory);input=path.resolve(input);output=path.resolve(output);
   if(output===input||output===path.join(directory,'notepadnext-plugin.json')||output===path.join(directory,'package.json'))throw new Error('Choose a separate HTML output file.');
   const manifest=JSON.parse(await fs.readFile(path.join(directory,'notepadnext-plugin.json'),'utf8'));
@@ -36,12 +37,12 @@ async function runDebug(directory,{input,output,command,watch=false}) {
     await host?.dispose();
     render=Promise.resolve();
     for(const file of Object.keys(require.cache))if(file.startsWith(dist))delete require.cache[file];
-    host=createTestHost({pluginId:manifest.id,capabilities:manifest.capabilities?.required,text:await fs.readFile(input,'utf8'),document:{uri:pathToFileURL(input).href},onRender:publish});
+    host=createTestHost({pluginId:manifest.id,capabilities:manifest.capabilities?.required,apiVersion,text:await fs.readFile(input,'utf8'),document:{uri:pathToFileURL(input).href},onRender:publish});
     await host.activate(require(entry));await host.invoke(command);await render;
     for(const message of host.messages)console.log(message.severity+': '+message.message);
     if(!host.panels.size) {
       const escape=value=>value.replace(/[&<>"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char]));
-      await publish({html:'<h1>Command completed</h1>'+host.messages.map(message=>'<p>'+escape(message.message)+'</p>').join('')});
+      await publish({html:'<h1>Command completed</h1><pre>'+escape(host.getSnapshot().text)+'</pre>'+host.messages.map(message=>'<p>'+escape(message.message)+'</p>').join('')});
     }
   }
   async function stop() {
@@ -98,7 +99,7 @@ async function runDebug(directory,{input,output,command,watch=false}) {
 }
 module.exports={runDebug,parseArguments};
 if(require.main===module) {
-  if(process.argv.includes('--help'))console.log('Usage: nnp-debug <project> --input <markdown-file> --output <html-file> [--command <id>] [--watch]\nExecutes your built CommonJS plugin using the SDK simulated host. Run Node with --inspect-brk=127.0.0.1:9229 for breakpoints.');
+  if(process.argv.includes('--help'))console.log('Usage: nnp-debug <project> --input <markdown-file> --output <html-file> [--command <id>] [--api-version 0.1.0|0.2.0] [--watch]\nExecutes your built CommonJS plugin using the SDK simulated host. Run Node with --inspect-brk=127.0.0.1:9229 for breakpoints.');
   else {
     try {
       if(Number(process.versions.node.split('.')[0])!==24)throw new Error('Use Node 24 for this SDK.');

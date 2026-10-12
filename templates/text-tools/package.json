@@ -7,9 +7,9 @@
     "build": "tsc -p tsconfig.json",
     "watch": "tsc -p tsconfig.json --watch --preserveWatchOutput",
     "test": "node --test test.cjs",
-    "debug": "nnp-debug . --input demo.md --output .debug/preview.html",
-    "dev": "nnp-debug . --input demo.md --output .debug/preview.html --watch",
-    "debug:break": "node --enable-source-maps --inspect-brk=127.0.0.1:9229 ./node_modules/@notepadnext/plugin-sdk/debug.cjs . --input demo.md --output .debug/preview.html",
+    "debug": "nnp-debug . --input demo.md --output .debug/preview.html --api-version 0.2.0",
+    "dev": "nnp-debug . --input demo.md --output .debug/preview.html --watch --api-version 0.2.0",
+    "debug:break": "node --enable-source-maps --inspect-brk=127.0.0.1:9229 ./node_modules/@notepadnext/plugin-sdk/debug.cjs . --input demo.md --output .debug/preview.html --api-version 0.2.0",
     "package": "nnp-package .",
     "bundle": "nnp-release ."
   },

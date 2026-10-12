@@ -1,3 +1,4 @@
+import type {PluginContext as NativeContext,PluginModule as NativeModule} from './native';
 import type {PluginContext,PluginModule,DocumentInfo,TextSnapshot,WebviewPanel,RenderContext} from './index';
 
 export interface TestPanel extends WebviewPanel {
@@ -20,11 +21,16 @@ export interface TestHost {
 /** In-memory test double. No Qt/RPC/CSP/OS isolation or host quota validation.
  * Compatible Webviews, all-document mirrors and resource mapping are unsupported.
  */
-export function createTestHost(options?:{
+export interface TestHostOptions {
   pluginId?:string;
   capabilities?:string[];
   text?:string;
   document?:Partial<DocumentInfo>;
-  apiVersion?:'0.1.0'|'0.2.0';
   onRender?:(panel:TestPanel)=>void;
-}):TestHost;
+}
+export interface NativeTestHost extends Omit<TestHost,'context'|'activate'> {
+  readonly context:NativeContext;
+  activate(plugin:NativeModule):Promise<void>;
+}
+export function createTestHost(options:TestHostOptions & {apiVersion:'0.2.0'}):NativeTestHost;
+export function createTestHost(options?:TestHostOptions & {apiVersion?:'0.1.0'}):TestHost;

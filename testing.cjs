@@ -6,6 +6,7 @@ function createTestHost({pluginId='tests.plugin',capabilities=[],text='',documen
   let active=false,closed=false,plugin,sequence=0,buffer=text;
   let info={documentId:'test-document',uri:'file:///test/example.md',languageId:'markdown',version:1,isDirty:true,isReadonly:false,...document};
   const commands=new Map(),watches=new Set(),resources=new Set(),panels=new Map(),messages=[],restorers=new Map();
+  const nativeInfo=()=>({name:'example.md',encoding:'utf-8',bom:false,lineEnding:buffer.includes('\r\n')?'crlf':buffer.includes('\r')?'cr':'lf',...info,byteLength:Buffer.byteLength(buffer),lineCount:buffer.split(/\r\n|\n|\r/).length});
   const snapshot=()=>({...info,text:buffer,positionEncoding:'utf-16'});
   const assertOpen=()=>{if(closed)throw new Error('Test host is disposed.');};
   function own(dispose) {
@@ -22,11 +23,11 @@ function createTestHost({pluginId='tests.plugin',capabilities=[],text='',documen
     };
   }
   const context={
-    pluginId,sessionId:randomUUID(),generation:1,subscriptions:[],stopping:stopping.signal,host:{apiVersion,supports:cap=>capabilities.includes(cap)},log:console,capabilities:Object.freeze([...capabilities]),
+    pluginId,sessionId:randomUUID(),generation:1,subscriptions:[],stopping:stopping.signal,host:{product:'Notepad Next ++',applicationVersion:'0.15.0',apiVersion,platform:process.platform==='darwin'?'macos':process.platform==='win32'?'windows':'linux',capabilities:Object.freeze([...capabilities]),limits:{maxSnapshotUtf8Bytes:2097152,maxEditsPerTransaction:256,maxPanelStateBytes:65536},supports:cap=>capabilities.includes(cap)},log:console,capabilities:Object.freeze([...capabilities]),
     commands:{async register(id,callback){assertOpen();if(commands.has(id))throw new Error('Command already registered: '+id);commands.set(id,callback);return own(()=>commands.delete(id));}},
     window:{async showMessage(severity,message,items=[]){assertOpen();if(!active)throw new Error('Show messages from a command after activation.');messages.push({severity,message,items:[...items]});return items[0];}},
     documents:{
-      async getActive(){assertOpen();return {...info};},async list(){return [{...info}];},async getInfo(id){if(id!==info.documentId)throw new Error('Unknown document.');return {...info};},
+      async getActive(){assertOpen();return {...info};},async list(){return [nativeInfo()];},async getInfo(id){if(id!==info.documentId)throw new Error('Unknown document.');return nativeInfo();},
       async getSnapshot(id){assertOpen();if(id!==info.documentId)throw new Error('Unknown document.');return snapshot();},
       async watch(listener){assertOpen();watches.add(listener);return Object.assign(own(()=>watches.delete(listener)),{document:{...info},eventSeq:sequence});},
       async watchAll(){return unsupported('documents.watchAll');},
@@ -41,9 +42,9 @@ function createTestHost({pluginId='tests.plugin',capabilities=[],text='',documen
         info={...info,version:info.version+1,isDirty:true};++selectionRevision;return {version:info.version};
       }
     },
-    editors:{async capture(invocation){assertOpen();if(invocation.editorId!=='test-editor'||invocation.documentId!==info.documentId)throw new Error('Unknown editor.');
+    editors:{async getActive(){return {editorId:'test-editor',documentId:info.documentId,windowId:'test-window'};},async getSelections(){return unsupported('editors.getSelections');},async setSelections(){return unsupported('editors.setSelections');},async capture(invocation){assertOpen();if(invocation.editorId!=='test-editor'||invocation.documentId!==info.documentId)throw new Error('Unknown editor.');
       const lines=buffer.split('\n'),end={line:lines.length-1,character:lines.at(-1).replace(/\r$/,'').length},start={line:0,character:0};
-      return {editor:{editorId:'test-editor',documentId:info.documentId,windowId:'test-window'},document:{...info},snapshot:snapshot(),selectedText:[buffer],selection:{editorId:'test-editor',documentId:info.documentId,documentVersion:info.version,revision:selectionRevision,mode:'stream',mainIndex:0,selections:[{range:{start,end},anchor:start,caret:end,anchorVirtualSpace:0,caretVirtualSpace:0}]}};
+      return {editor:{editorId:'test-editor',documentId:info.documentId,windowId:'test-window'},document:nativeInfo(),snapshot:{...snapshot(),...nativeInfo()},selectedText:[buffer],selection:{editorId:'test-editor',documentId:info.documentId,documentVersion:info.version,revision:selectionRevision,mode:'stream',mainIndex:0,selections:[{range:{start,end},anchor:start,caret:end,anchorVirtualSpace:0,caretVirtualSpace:0}]}};
     }},core:{async list(){return unsupported('core.list');},async execute(){return unsupported('core.execute');}},
     webviews:{
       registerRestorer(type,callback){restorers.set(type,callback);return {dispose:()=>restorers.delete(type)};},
@@ -66,6 +67,7 @@ function createTestHost({pluginId='tests.plugin',capabilities=[],text='',documen
         });
         panels.set(panelId,panel);return panel;
       },
+      async createHtml(){return unsupported('webviews.createHtml');},
       async createCompatible(){return unsupported('webviews.createCompatible');}
     },storage:store(),configuration:store()
   };

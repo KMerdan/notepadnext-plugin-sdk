@@ -1,6 +1,6 @@
 # API 0.1 参考（兼容已有插件）
 
-SDK 0.2.0 同时保留此旧契约。新的固定目标命令、选区和 core 接口见 [Native API 0.2](NativeAPI.zh-CN.md)；这里的命令回调仍使用原来的 positional args。
+SDK 0.2.1 同时保留此旧契约。新的固定目标命令、选区和 core 接口见 [Native API 0.2](NativeAPI.zh-CN.md)；这里的命令回调仍使用原来的 positional args。
 
 # API 与 metadata
 

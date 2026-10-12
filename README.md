@@ -1,6 +1,6 @@
 # Notepad Next ++ Plugin SDK
 
-The native plugin development kit for [Notepad Next ++](https://github.com/KMerdan/notepad-next-plus-plus), maintained by KMerdan. **SDK 0.2.0**, Node **24**. Enhance the existing editor with text tools, previews and HTML/JS services. Plugin authors do not need Qt or the application source tree.
+The native plugin development kit for [Notepad Next ++](https://github.com/KMerdan/notepad-next-plus-plus), maintained by KMerdan. **SDK 0.2.1**, Node **24**. Enhance the existing editor with text tools, previews and HTML/JS services. Plugin authors do not need Qt or the application source tree.
 
 The application implements the native services and owns plugin processes, permissions and panels. This repository owns the public API declarations, metadata/wire contracts, templates, test host and development/package tools. The [official Marketplace](https://github.com/KMerdan/notepadnext-markdown-preview) owns Markdown/HTML plugin sources and independent releases.
 
@@ -21,7 +21,7 @@ The application implements the native services and owns plugin processes, permis
 GitHub Releases provide an npm-format tarball and `sdk-checksums.json`; this package is not on the npm registry. Install an exact URL and commit your lockfile:
 
 ```sh
-npm install --save-dev --ignore-scripts https://github.com/KMerdan/notepadnext-plugin-sdk/releases/download/v0.2.0/notepadnext-plugin-sdk-0.2.0.tgz
+npm install --save-dev --ignore-scripts https://github.com/KMerdan/notepadnext-plugin-sdk/releases/download/v0.2.1/notepadnext-plugin-sdk-0.2.1.tgz
 npx --no-install nnp-create ../my-tools --template text-tools --id yourname.text-tools
 cd ../my-tools
 npm install --ignore-scripts
@@ -47,7 +47,7 @@ npm run test:standalone
 
 Unit tests need no npm install. Standalone validation packs the actual file whitelist, installs it outside this repository and builds/tests/packages all four templates. Local services require loopback access; template dependencies are installed with hooks disabled. These simulations do not replace native Qt/RPC/undo/CSP tests in the application.
 
-`npm run release:kit -- ../sdk-assets v0.2.0` creates a new output directory. Tag CI validates the package before creating a draft release. Verify and publish immutable assets; do not overwrite a version. Application schema snapshots are synchronized from its reviewed SDK submodule by `scripts/sync-plugin-sdk-contracts.py` in the application repository.
+`npm run release:kit -- ../sdk-assets v0.2.1` creates a new output directory. Tag CI validates the package before creating a draft release. Verify and publish immutable assets; do not overwrite a version. Application schema snapshots are synchronized from its reviewed SDK submodule by `scripts/sync-plugin-sdk-contracts.py` in the application repository.
 
 ## License and provenance
 

@@ -79,6 +79,9 @@ async function main() {
   await run('25-native-install',[npm,'install',...npmOptions],native);
   await run('26-native-build',[npm,'run','build'],native);
   await run('27-native-test',[npm,'test'],native);
+  await fs.writeFile(path.join(native,'demo.md'),'hello 😀中文');
+  await run('29-native-debug',[npm,'run','debug'],native);
+  assert.match(await fs.readFile(path.join(native,'.debug/preview.html'),'utf8'),/<pre>HELLO 😀中文<\/pre>/);
   await run('28-native-package',[npm,'run','package','--',path.join(artifacts,'text-tools-0.1.0')],native);
   const fixture=path.join(root,'built-vscode');await fs.mkdir(path.join(fixture,'out'),{recursive:true});
   await fs.writeFile(path.join(fixture,'package.json'),JSON.stringify({name:'hello',publisher:'demo',version:'1.0.0',engines:{vscode:'^1.80.0'},main:'./out/extension.js',contributes:{commands:[{command:'hello.open',title:'Hello'}],configuration:{properties:{'hello.greeting':{type:'string',default:'Hi'}}}}}));
