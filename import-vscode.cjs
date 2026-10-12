@@ -3,7 +3,7 @@
 'use strict';
 const fs=require('node:fs/promises'),path=require('node:path'),crypto=require('node:crypto');
 const {portable,canonicalOutput}=require('./pack.cjs');
-const {configurationDefinitions}=require('../plugin-host/vscode/persistence.cjs');
+const {configurationDefinitions}=require('./compat/configuration.cjs');
 const VERSION='0.1.0',API='1.100.0';
 function apiRange(range){
   // Explicit bounded stable-version range grammar. Unsupported expressions

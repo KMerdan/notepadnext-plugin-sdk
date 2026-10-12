@@ -1,0 +1,34 @@
+name: SDK release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+concurrency:
+  group: sdk-release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - run: npm test
+      - run: node tests/standalone.cjs "$RUNNER_TEMP/sdk-standalone"
+      - name: Package SDK development kit
+        env:
+          SDK_TAG: ${{ github.ref_name }}
+        run: node tools/release-sdk.cjs "$RUNNER_TEMP/sdk-release" "$SDK_TAG"
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SDK_TAG: ${{ github.ref_name }}
+        run: gh release create "$SDK_TAG" "$RUNNER_TEMP/sdk-release/"*.tgz "$RUNNER_TEMP/sdk-release/sdk-checksums.json" --verify-tag --draft --title "SDK $SDK_TAG" --generate-notes

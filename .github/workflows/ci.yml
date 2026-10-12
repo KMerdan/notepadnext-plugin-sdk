@@ -1,0 +1,21 @@
+name: SDK checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - run: npm test
+      - run: node tests/standalone.cjs "$RUNNER_TEMP/sdk-standalone"

@@ -20,7 +20,7 @@ test('generated project is self-contained with matching command identities, sche
   assert.match(await fs.readFile(path.join(directory,'.gitignore'),'utf8'),/\.debug/);
   assert.ok(JSON.parse(await fs.readFile(path.join(directory,'tsconfig.json'),'utf8')).compilerOptions.sourceMap);
   for(const file of ['index.d.ts','testing.cjs','debug.cjs','create.cjs','docs/MarkdownWalkthrough.zh-CN.md','schemas/manifest.schema.json','templates/hello/src/index.ts'])assert.ok((await fs.stat(path.join(directory,'tools/plugin-sdk',file))).isFile());
-  assert.equal(await fs.readFile(path.join(directory,'tools/plugin-sdk/schemas/manifest.schema.json'),'utf8'),await fs.readFile(path.join(__dirname,'../../doc/plugin-system/manifest.schema.json'),'utf8'));
+  assert.equal(await fs.readFile(path.join(directory,'tools/plugin-sdk/schemas/manifest.schema.json'),'utf8'),await fs.readFile(path.join(__dirname,'schemas/manifest.schema.json'),'utf8'));
 });
 test('creation refuses invalid identities, recursive destinations and existing projects without changing files',async t=>{
   const root=await temporary(t),directory=path.join(root,'plugin');
