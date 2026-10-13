@@ -78,6 +78,8 @@ export interface PluginContext extends Omit<BaseContext, 'commands' | 'documents
     setSelections(id:string,expectedDocumentVersion:number,expectedRevision:number,selections:Selection[],mainIndex:number):Promise<SelectionState>;
   };
   readonly core: {list():Promise<CoreCommandInfo[]>; execute<K extends keyof CoreCommandMap>(id:K,request:CoreCommandMap[K],options?:CallOptions):Promise<{version:number}>};
+  /** Only editor-preview plugins with webviews.document@1. Never opens a panel. */
+  readonly previews: {getSource(options?:CallOptions):Promise<import("./base").DocumentInfo|null>};
   readonly files: {
     create(options?:{text?:string;languageId?:string;activate?:boolean},callOptions?:CallOptions):Promise<FileOperationResult>;
     open(uri:string,options?:{activate?:boolean},callOptions?:CallOptions):Promise<FileOperationResult>;
@@ -97,3 +99,6 @@ export interface PluginContext extends Omit<BaseContext, 'commands' | 'documents
 export interface PluginModule {activate(context:PluginContext):void|Promise<void>;deactivate?():void|Promise<void>;}
 /** Main-world bridge supplied to full HTML/service panels; JSON state is bounded to 64 KiB. */
 export interface PanelApi {postMessage(message:Json):void;getState():Json|undefined;setState(state:Json|undefined):Json|undefined;}
+
+export type PluginCategory = "command" | "editor-tool" | "editor-preview" | "window-tool" | "background-service";
+export interface PreviewPolicy {viewType:string;languages:string[];extensions:string[];}

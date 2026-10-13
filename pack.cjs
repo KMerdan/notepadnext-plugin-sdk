@@ -79,6 +79,11 @@ async function pack(source,output) {
     }
     if(metadata.manifestVersion!==1||metadata.list!==false||metadata.runtime?.kind!=='node')throw new Error('Expected one native Node plugin.');
     if(metadata.version!==info.version)throw new Error('Package and plugin versions differ.');
+    if(metadata.category!==undefined&&!manifestProfile.properties.category.enum.includes(metadata.category))throw new Error('Unknown plugin category.');
+    if(metadata.category==='editor-preview'){
+      const p=metadata.preview;const caps=metadata.capabilities?.required??[];
+      if(!p?.viewType||!Array.isArray(p.languages)||!Array.isArray(p.extensions)||(!p.languages.length&&!p.extensions.length)||!caps.includes('webviews.document@1')||!caps.includes('documents.read@1')||metadata.activationEvents.some(event=>!event.startsWith('onCommand:')))throw new Error('Editor previews require a file type policy, source binding capability and explicit commands.');
+    }else if(metadata.preview!==undefined)throw new Error('Only editor-preview plugins can declare a preview policy.');
     const entry=metadata.runtime.entry;
     if(!portable(entry)||!entry.startsWith('dist/'))throw new Error('Release entry must be a built file inside dist/.');
     await copy(path.join(source,'notepadnext-plugin.json'),'notepadnext-plugin.json');

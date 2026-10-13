@@ -1,6 +1,6 @@
 # 原生 API 0.3
 
-SDK 0.3.0 的根入口与 `@notepadnext/plugin-sdk/native` 提供相同的原生 API 0.3 类型。manifest 声明 `engines.api: ^0.3.0`，命令统一接收固定目标的 `CommandInvocation`。全部官方模板和 Marketplace 插件使用这一契约。
+SDK 0.3.1 的根入口与 `@notepadnext/plugin-sdk/native` 提供相同的原生 API 0.3 类型。manifest 声明 `engines.api: ^0.3.0`，命令统一接收固定目标的 `CommandInvocation`。全部官方模板和 Marketplace 插件使用这一契约。
 
 ## 已实现的编辑基础
 
