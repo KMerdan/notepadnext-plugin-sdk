@@ -1,6 +1,6 @@
 # 原生 API 0.3
 
-SDK 0.3.1 的根入口与 `@notepadnext/plugin-sdk/native` 提供相同的原生 API 0.3 类型。manifest 声明 `engines.api: ^0.3.0`，命令统一接收固定目标的 `CommandInvocation`。全部官方模板和 Marketplace 插件使用这一契约。
+SDK 0.3.2 的根入口与 `@notepadnext/plugin-sdk/native` 提供相同的原生 API 0.3 类型。manifest 声明 `engines.api: ^0.3.0`，命令统一接收固定目标的 `CommandInvocation`。全部官方模板和 Marketplace 插件使用这一契约。
 
 ## 已实现的编辑基础
 
@@ -62,3 +62,7 @@ export async function activate(ctx:PluginContext) {
 文件生命周期、字面量搜索、语言、书签和会话高亮已实现，见 [Phase B](PhaseB.zh-CN.md)。编码转换、宏、providers 与导出仍未开放。单宿主窗口，没有 shared-buffer 克隆视图承诺。原生完整验收由应用仓库承担；模拟 test host 支持 selection transform，但明确拒绝 core/native renderer 模拟。
 
 text-tools 的 `npm run debug/dev/debug:break` 显式传 `--api-version 0.3.0`，模拟 debugger 提供固定 invocation 并将转换后的正文输出到 HTML。默认 debugger 使用同一 API 0.3；自建项目也可显式声明这一版本。core、选择不同子范围和浏览器渲染仍需 native 验证。
+
+## 文件编码元数据
+
+`documents.getInfo()` 和原生文档事件的 `encoding` 是长度 1–64 的字符集名称，使用小写形式，例如 `utf-8`、`utf-16le`、`windows-1252`、`shift_jis`、`gb18030`；无法确定时为 `unknown`。`bom` 单独表示 BOM。这里报告的是文件保存格式；编辑缓冲区与文本 API 仍使用 Unicode/UTF-8 坐标约定。编码转换由编辑器 Encoding 菜单提供，尚无 SDK 转换方法。
