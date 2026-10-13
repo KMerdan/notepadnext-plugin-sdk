@@ -1,6 +1,6 @@
-# 原生 API 0.2
+# 原生 API 0.3
 
-SDK 0.2.1 的原生入口为 `@notepadnext/plugin-sdk/native`。需要实现 API 0.2 的 Notepad Next ++ 构建；manifest 声明 `engines.api: ^0.2.0`。SDK 根入口仍是旧 API 0.1 类型，供已有 Markdown/HTML 包使用。两种命令回调不会混用。
+SDK 0.2.1 的原生入口为 `@notepadnext/plugin-sdk/native`。需要实现 API 0.3 的 Notepad Next ++ 构建；manifest 声明 `engines.api: ^0.3.0`。SDK 根入口仍是旧 API 0.1 类型，供已有 Markdown/HTML 包使用。两种命令回调不会混用。
 
 ## 已实现的编辑基础
 
@@ -61,4 +61,4 @@ export async function activate(ctx:PluginContext) {
 
 文件保存/关闭、搜索、语言、书签、装饰、导出、宏及 providers 是后续 B/C 范围，当前不在 native types 中。Python prototype 保持 API 0.1；0.2 的首批作者入口为 TS/JS。单宿主窗口，没有 shared-buffer 克隆视图承诺。原生完整验收由应用仓库承担；模拟 test host 支持 selection transform，但明确拒绝 core/native renderer 模拟。
 
-text-tools 的 `npm run debug/dev/debug:break` 显式传 `--api-version 0.2.0`，模拟 debugger 提供固定 invocation 并将转换后的正文输出到 HTML。默认 debugger 仍使用 0.1；自建 native 项目需要同一选项。core、选择不同子范围和浏览器渲染仍需 native 验证。
+text-tools 的 `npm run debug/dev/debug:break` 显式传 `--api-version 0.3.0`，模拟 debugger 提供固定 invocation 并将转换后的正文输出到 HTML。默认 debugger 仍使用 0.1；自建 native 项目需要同一选项。core、选择不同子范围和浏览器渲染仍需 native 验证。

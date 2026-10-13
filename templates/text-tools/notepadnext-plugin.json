@@ -7,7 +7,7 @@
   "description": "Compose native editor operations and guarded selection transforms.",
   "engines": {
     "notepadnext": ">=0.15.0 <0.16.0",
-    "api": "^0.2.0"
+    "api": "^0.3.0"
   },
   "runtime": {
     "kind": "node",

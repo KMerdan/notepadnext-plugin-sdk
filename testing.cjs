@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 'use strict';
 const {randomUUID}=require('node:crypto'),{isDeepStrictEqual}=require('node:util');
-function createTestHost({pluginId='tests.plugin',capabilities=[],text='',document={},apiVersion='0.1.0',onRender=()=>{}}={}) {
+function createTestHost({pluginId='tests.plugin',capabilities=[],text='',document={},apiVersion='0.3.0',onRender=()=>{}}={}) {
   const stopping=new AbortController();let selectionRevision=1;
   let active=false,closed=false,plugin,sequence=0,buffer=text;
   let info={documentId:'test-document',uri:'file:///test/example.md',languageId:'markdown',version:1,isDirty:true,isReadonly:false,...document};
@@ -79,7 +79,7 @@ function createTestHost({pluginId='tests.plugin',capabilities=[],text='',documen
   };
   const host={context,panels,messages,getSnapshot:snapshot,
     async activate(module){assertOpen();if(plugin)throw new Error('Test host has already activated a plugin.');plugin=module;await plugin.activate(context);active=true;},
-    async invoke(id,...args){assertOpen();if(!active)throw new Error('Plugin is not active.');if(!commands.has(id))throw new Error('Command is not registered: '+id);return apiVersion!=='0.1.0'?commands.get(id)({commandId:id,windowId:'test-window',editorId:'test-editor',documentId:info.documentId,args}):commands.get(id)(...args);},
+    async invoke(id,...args){assertOpen();if(!active)throw new Error('Plugin is not active.');if(!commands.has(id))throw new Error('Command is not registered: '+id);return commands.get(id)({commandId:id,windowId:'test-window',editorId:'test-editor',documentId:info.documentId,args});},
     setDocument(value,metadata={}) {
       assertOpen();buffer=value;info={...info,...metadata,version:info.version+1,isDirty:true};
       const event={subscriptionId:'test-watch',eventSeq:++sequence,type:'contentInvalidated',document:{...info}};
