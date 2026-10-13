@@ -3,7 +3,7 @@
 ## 前提
 
 - 开发工具：Node 24 与 npm。TypeScript 5.9.3 和 Markdown-it 15.0.2 由模板安装并锁定。
-- 编辑器：支持插件的 Notepad Next ++ 0.15.x。全部六个模板使用 API 0.3。预览面板需要包含 WebEngine 的构建；正式 0.15.1 下载包已包含 WebEngine 和 Node 24。
+- 编辑器：支持插件的 Notepad Next ++ 0.15.2+。全部六个模板使用 API 0.3。预览面板需要包含 WebEngine 的构建；完整下载包包含 WebEngine 和 Node 24。
 - 无需 GitHub 仓库、Developer ID、公证或发布即可本地开发和安装。
 
 通过解包后的 `create.cjs` 创建项目，或在工具项目中安装 SDK tgz 后使用 `nnp-create`。新项目路径必须不存在；ID 使用 `publisher.name`，两个部分由小写字母、数字和短横线组成。

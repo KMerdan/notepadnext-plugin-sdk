@@ -6,7 +6,7 @@
   "list": false,
   "description": "Find TODO markers, highlight their native ranges and navigate results.",
   "engines": {
-    "notepadnext": ">=0.15.0 <0.16.0",
+    "notepadnext": ">=0.15.2 <0.16.0",
     "api": "^0.3.0"
   },
   "runtime": {
@@ -47,5 +47,6 @@
         "order": 110
       }
     ]
-  }
+  },
+  "category": "editor-tool"
 }

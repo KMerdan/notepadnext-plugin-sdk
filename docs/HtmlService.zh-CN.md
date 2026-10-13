@@ -11,7 +11,7 @@ npm test
 node tools/plugin-sdk/pack.cjs . ../html-local-package
 ```
 
-在 Notepad Next++ 的 Plugin Manager 注册项目的 notepadnext-plugin.json，再在 Discover 中选 Local Package，选择 html-local-package。安装完成后在 Installed 中启用并运行 Open HTML Preview。打开一个 HTML 文档，点击 Load active HTML buffer，再 Run preview。计数器和 Node PID 用来确认客户端脚本和真实后台服务都在工作。
+在 Notepad Next++ 的 Plugin Manager 注册项目的 notepadnext-plugin.json，再在 Discover 中选 Local Package，选择 html-local-package。安装完成后在 Installed 中启用并运行 Open HTML Preview。在匹配的 HTML tab 上手动执行 Open HTML Preview。面板只显示当前未保存缓冲区渲染出的完整 HTML/JS，不插入来源编辑框、演示计数器或进程信息。切换匹配 tab 时共享 dock 跟随；用户关闭或最后一个源 tab 关闭时结束预览。生命周期见 [插件类别与组件所有权](PluginLifecycle.zh-CN.md)。
 
 build.cjs 把 SDK 的 local-service.cjs 复制到 dist。发布包不依赖开发机器上的 SDK 路径，也没有 npm 或 Qt 编译步骤。模板是 CommonJS；TypeScript 开发者可使用 local-service.d.ts 和 @types/node。
 

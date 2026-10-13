@@ -38,7 +38,7 @@ async function render() {
   controller?.abort(); const task=new AbortController(); controller=task;
   let renderContext:RenderContext={documentId:null,version:null};
   try {
-    const document=await context.documents.getActive({signal:task.signal});
+    const document=await context.previews.getSource({signal:task.signal});
     if(document) renderContext={documentId:document.documentId,version:document.version};
     let html='<p>Open a Markdown document to preview it.</p>';
     if(document && (document.languageId==='markdown' || /\.md(?:own|arkdown)?$/i.test(new URL(document.uri).pathname))) {
@@ -71,7 +71,8 @@ async function open() {
       const oldWatch=watch; watch=undefined; void Promise.resolve().then(()=>oldWatch?.dispose()).catch(error=>console.warn(error));
     }
   });
-  watch=await context.documents.watch(()=>invalidate());
+  watch=await context.documents.watch(event=>{if(event.type==='contentInvalidated'||event.type==='reset')invalidate();});
+  created.onEvent(event=>{if(event.type==='sourceChanged')invalidate();});
   await created.reveal(); ++revision; await render();
 }
 export async function activate(api:PluginContext) {

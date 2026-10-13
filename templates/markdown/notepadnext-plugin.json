@@ -6,7 +6,7 @@
   "list": false,
   "description": "Preview the current Markdown buffer, including unsaved edits.",
   "engines": {
-    "notepadnext": ">=0.15.0 <0.16.0",
+    "notepadnext": ">=0.15.2 <0.16.0",
     "api": "^0.3.0"
   },
   "runtime": {
@@ -19,7 +19,8 @@
       "documents.events@1",
       "commands@1",
       "webviews@1",
-      "webviews.restore@1"
+      "webviews.restore@1",
+      "webviews.document@1"
     ],
     "optional": []
   },
@@ -47,5 +48,17 @@
       }
     ]
   },
-  "displayIcon": "markdown"
+  "displayIcon": "markdown",
+  "category": "editor-preview",
+  "preview": {
+    "viewType": "markdown-preview",
+    "languages": [
+      "markdown"
+    ],
+    "extensions": [
+      ".md",
+      ".markdown",
+      ".mdown"
+    ]
+  }
 }

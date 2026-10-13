@@ -14,4 +14,4 @@ nnp-release ./plugins/html-preview ../html-assets kmerdan.html-preview/v0.1.1
 
 保持根 list 中的版本、权限和 commands 与对应包 manifest 完全相同，尽量用生成与 CI 检查防止漂移；发布新版本时更新目录并生成对应独立 Release。每个更新都保留自身 ID 和 repository 来源，支持窗口恢复的插件遵循 [HotUpdate](HotUpdate.zh-CN.md)。
 
-实际示例：[Notepad Next ++ Official Plugins](https://github.com/KMerdan/notepadnext-markdown-preview)。仓库包含 Markdown、HTML 服务插件，独立 lockfile、本地开发文档和 tag 驱动 CI。此地址沿用原 Markdown 仓库，因此旧安装可以刷新同一来源升级为目录。
+实际示例：[Notepad Next ++ Official Plugins](https://github.com/KMerdan/notepadnext-plugin-marketplace)。仓库包含 Markdown、HTML 服务插件，独立 lockfile、本地开发文档和 tag 驱动 CI。此地址沿用原 Markdown 仓库，因此旧安装可以刷新同一来源升级为目录。

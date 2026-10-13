@@ -6,7 +6,7 @@
   "version": "0.1.0",
   "list": false,
   "engines": {
-    "notepadnext": ">=0.15.0 <0.16.0",
+    "notepadnext": ">=0.15.2 <0.16.0",
     "api": "^0.3.0"
   },
   "runtime": {
@@ -20,7 +20,8 @@
       "documents.events@1",
       "webviews@1",
       "webviews.service@1",
-      "webviews.restore@1"
+      "webviews.restore@1",
+      "webviews.document@1"
     ],
     "optional": []
   },
@@ -40,6 +41,17 @@
         "command": "__PLUGIN_ID__.open",
         "order": 120
       }
+    ]
+  },
+  "category": "editor-preview",
+  "preview": {
+    "viewType": "html-preview",
+    "languages": [
+      "html"
+    ],
+    "extensions": [
+      ".html",
+      ".htm"
     ]
   }
 }
