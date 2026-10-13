@@ -37,6 +37,12 @@ test('rejects icon formats excluded by the registration metadata profile',async 
   await assert.rejects(pack(source,output),/PNG paths/);
   await assert.rejects(fs.stat(output),{code:'ENOENT'});
 });
+test('rejects unknown root metadata fields before producing an uninstallable package',async t=>{
+ const {source,output,write}=await fixture(t);
+ await write('notepadnext-plugin.json',{manifestVersion:1,id:'tests.sample',version:'1.0.0',list:false,runtime:{kind:'node',entry:'dist/index.js'},icon:'dist/media/icon.png'});
+ await assert.rejects(pack(source,output),/Unknown registration metadata field: icon/);
+ await assert.rejects(fs.stat(output),{code:'ENOENT'});
+});
 test('rejects links and native addons',async t=> {
   const {source,output,write}=await fixture(t);await fs.symlink(path.join(source,'LICENSE'),path.join(source,'dist','link'));
   await assert.rejects(pack(source,output),/Symlinks/);await fs.unlink(path.join(source,'dist/link'));await write('dist/addon.node','native');

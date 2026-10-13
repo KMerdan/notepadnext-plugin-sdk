@@ -88,5 +88,5 @@ test('native debugger supplies API 0.2 invocation and renders the transformed te
  await fs.writeFile(path.join(directory,'notepadnext-plugin.json'),JSON.stringify({list:false,id:'test.native-debug',engines:{api:'^0.2.0'},runtime:{kind:'node',entry:'dist/index.js'},capabilities:{required:[]},contributes:{commands:[{id:'test.native-debug.upper'}]}}));
  await fs.writeFile(path.join(directory,'dist/index.js'),"exports.activate=async ctx=>ctx.commands.register('test.native-debug.upper',async inv=>{if(ctx.host.apiVersion!=='0.2.0')throw new Error('profile mismatch');const c=await ctx.editors.capture(inv);await ctx.documents.applyEdits(c.document.documentId,c.document.version,c.selection.selections.map((s,n)=>({range:s.range,text:c.selectedText[n].toUpperCase()})),{selectionGuard:{editorId:c.editor.editorId,revision:c.selection.revision}});});");
  await fs.writeFile(input,'hello 😀中文');await runDebug(directory,{input,output,apiVersion:'0.2.0'});assert.match(await fs.readFile(output,'utf8'),/<pre>HELLO 😀中文<\/pre>/);
- const {parseArguments}=require('./debug.cjs');assert.throws(()=>parseArguments([directory,'--input',input,'--output',output,'--api-version','0.3.0']),/api-version/);
+ const {parseArguments}=require('./debug.cjs');assert.throws(()=>parseArguments([directory,'--input',input,'--output',output,'--api-version','0.4.0']),/api-version/);
 });

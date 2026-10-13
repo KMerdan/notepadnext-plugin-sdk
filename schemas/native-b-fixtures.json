@@ -1,0 +1,632 @@
+[
+  {
+    "name": "nnp.host.getNativeLimits Phase B valid request",
+    "method": "nnp.host.getNativeLimits",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1
+    }
+  },
+  {
+    "name": "nnp.host.getNativeLimits Phase B rejects stale identity type",
+    "method": "nnp.host.getNativeLimits",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1"
+    }
+  },
+  {
+    "name": "nnp.documents.readRange Phase B valid request",
+    "method": "nnp.documents.readRange",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "range": {
+        "start": {
+          "line": 0,
+          "character": 0
+        },
+        "end": {
+          "line": 0,
+          "character": 2
+        }
+      }
+    }
+  },
+  {
+    "name": "nnp.documents.readRange Phase B rejects stale identity type",
+    "method": "nnp.documents.readRange",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "range": {
+        "start": {
+          "line": 0,
+          "character": 0
+        },
+        "end": {
+          "line": 0,
+          "character": 2
+        }
+      }
+    }
+  },
+  {
+    "name": "nnp.documents.watchNative Phase B valid request",
+    "method": "nnp.documents.watchNative",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1
+    }
+  },
+  {
+    "name": "nnp.documents.watchNative Phase B rejects stale identity type",
+    "method": "nnp.documents.watchNative",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1"
+    }
+  },
+  {
+    "name": "nnp.editors.watchSelections Phase B valid request",
+    "method": "nnp.editors.watchSelections",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "editorId": "editor"
+    }
+  },
+  {
+    "name": "nnp.editors.watchSelections Phase B rejects stale identity type",
+    "method": "nnp.editors.watchSelections",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "editorId": "editor"
+    }
+  },
+  {
+    "name": "nnp.editors.activate Phase B valid request",
+    "method": "nnp.editors.activate",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "editorId": "editor",
+      "expectedDocumentVersion": 1,
+      "preserveFocus": true
+    }
+  },
+  {
+    "name": "nnp.editors.activate Phase B rejects stale identity type",
+    "method": "nnp.editors.activate",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "editorId": "editor",
+      "expectedDocumentVersion": 1,
+      "preserveFocus": true
+    }
+  },
+  {
+    "name": "nnp.editors.revealRange Phase B valid request",
+    "method": "nnp.editors.revealRange",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "editorId": "editor",
+      "expectedDocumentVersion": 1,
+      "range": {
+        "start": {
+          "line": 0,
+          "character": 0
+        },
+        "end": {
+          "line": 0,
+          "character": 2
+        }
+      }
+    }
+  },
+  {
+    "name": "nnp.editors.revealRange Phase B rejects stale identity type",
+    "method": "nnp.editors.revealRange",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "editorId": "editor",
+      "expectedDocumentVersion": 1,
+      "range": {
+        "start": {
+          "line": 0,
+          "character": 0
+        },
+        "end": {
+          "line": 0,
+          "character": 2
+        }
+      }
+    }
+  },
+  {
+    "name": "nnp.editors.getOptions Phase B valid request",
+    "method": "nnp.editors.getOptions",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "editorId": "editor"
+    }
+  },
+  {
+    "name": "nnp.editors.getOptions Phase B rejects stale identity type",
+    "method": "nnp.editors.getOptions",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "editorId": "editor"
+    }
+  },
+  {
+    "name": "nnp.files.create Phase B valid request",
+    "method": "nnp.files.create",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "text": "result \ud83d\ude00\u4e2d",
+      "activate": false
+    }
+  },
+  {
+    "name": "nnp.files.create Phase B rejects stale identity type",
+    "method": "nnp.files.create",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "text": "result \ud83d\ude00\u4e2d",
+      "activate": false
+    }
+  },
+  {
+    "name": "nnp.files.open Phase B valid request",
+    "method": "nnp.files.open",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "uri": "file:///tmp/example.txt"
+    }
+  },
+  {
+    "name": "nnp.files.open Phase B rejects stale identity type",
+    "method": "nnp.files.open",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "uri": "file:///tmp/example.txt"
+    }
+  },
+  {
+    "name": "nnp.files.save Phase B valid request",
+    "method": "nnp.files.save",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "documentId": "doc",
+      "expectedVersion": 1
+    }
+  },
+  {
+    "name": "nnp.files.save Phase B rejects stale identity type",
+    "method": "nnp.files.save",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "documentId": "doc",
+      "expectedVersion": 1
+    }
+  },
+  {
+    "name": "nnp.files.saveAs Phase B valid request",
+    "method": "nnp.files.saveAs",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "uri": "file:///tmp/result.txt"
+    }
+  },
+  {
+    "name": "nnp.files.saveAs Phase B rejects stale identity type",
+    "method": "nnp.files.saveAs",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "uri": "file:///tmp/result.txt"
+    }
+  },
+  {
+    "name": "nnp.files.close Phase B valid request",
+    "method": "nnp.files.close",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "policy": "ifClean"
+    }
+  },
+  {
+    "name": "nnp.files.close Phase B rejects stale identity type",
+    "method": "nnp.files.close",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "policy": "ifClean"
+    }
+  },
+  {
+    "name": "nnp.search.findAll Phase B valid request",
+    "method": "nnp.search.findAll",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "text": "TODO",
+      "maxResults": 4
+    }
+  },
+  {
+    "name": "nnp.search.findAll Phase B rejects stale identity type",
+    "method": "nnp.search.findAll",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "text": "TODO",
+      "maxResults": 4
+    }
+  },
+  {
+    "name": "nnp.search.count Phase B valid request",
+    "method": "nnp.search.count",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "text": "TODO",
+      "wholeWord": true
+    }
+  },
+  {
+    "name": "nnp.search.count Phase B rejects stale identity type",
+    "method": "nnp.search.count",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "text": "TODO",
+      "wholeWord": true
+    }
+  },
+  {
+    "name": "nnp.languages.list Phase B valid request",
+    "method": "nnp.languages.list",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1
+    }
+  },
+  {
+    "name": "nnp.languages.list Phase B rejects stale identity type",
+    "method": "nnp.languages.list",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1"
+    }
+  },
+  {
+    "name": "nnp.languages.getKeywords Phase B valid request",
+    "method": "nnp.languages.getKeywords",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "languageId": "html"
+    }
+  },
+  {
+    "name": "nnp.languages.getKeywords Phase B rejects stale identity type",
+    "method": "nnp.languages.getKeywords",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "languageId": "html"
+    }
+  },
+  {
+    "name": "nnp.languages.set Phase B valid request",
+    "method": "nnp.languages.set",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "languageId": "html"
+    }
+  },
+  {
+    "name": "nnp.languages.set Phase B rejects stale identity type",
+    "method": "nnp.languages.set",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "languageId": "html"
+    }
+  },
+  {
+    "name": "nnp.documents.convertLineEndings Phase B valid request",
+    "method": "nnp.documents.convertLineEndings",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "lineEnding": "lf"
+    }
+  },
+  {
+    "name": "nnp.documents.convertLineEndings Phase B rejects stale identity type",
+    "method": "nnp.documents.convertLineEndings",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "lineEnding": "lf"
+    }
+  },
+  {
+    "name": "nnp.bookmarks.list Phase B valid request",
+    "method": "nnp.bookmarks.list",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "documentId": "doc"
+    }
+  },
+  {
+    "name": "nnp.bookmarks.list Phase B rejects stale identity type",
+    "method": "nnp.bookmarks.list",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "documentId": "doc"
+    }
+  },
+  {
+    "name": "nnp.bookmarks.set Phase B valid request",
+    "method": "nnp.bookmarks.set",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "lines": [
+        0,
+        2
+      ],
+      "marked": true
+    }
+  },
+  {
+    "name": "nnp.bookmarks.set Phase B rejects stale identity type",
+    "method": "nnp.bookmarks.set",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "documentId": "doc",
+      "expectedVersion": 1,
+      "lines": [
+        0,
+        2
+      ],
+      "marked": true
+    }
+  },
+  {
+    "name": "nnp.decorations.create Phase B valid request",
+    "method": "nnp.decorations.create",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "documentId": "doc",
+      "style": "highlight",
+      "color": "#007aff"
+    }
+  },
+  {
+    "name": "nnp.decorations.create Phase B rejects stale identity type",
+    "method": "nnp.decorations.create",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "documentId": "doc",
+      "style": "highlight",
+      "color": "#007aff"
+    }
+  },
+  {
+    "name": "nnp.decorations.set Phase B valid request",
+    "method": "nnp.decorations.set",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "resourceId": "resource",
+      "expectedVersion": 1,
+      "ranges": []
+    }
+  },
+  {
+    "name": "nnp.decorations.set Phase B rejects stale identity type",
+    "method": "nnp.decorations.set",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "resourceId": "resource",
+      "expectedVersion": 1,
+      "ranges": []
+    }
+  },
+  {
+    "name": "nnp.documents.nativeEvent Phase B valid request",
+    "method": "nnp.documents.nativeEvent",
+    "part": "params",
+    "valid": true,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "subscriptionId": "subscription",
+      "eventSeq": 1,
+      "type": "activeChanged",
+      "document": null
+    }
+  },
+  {
+    "name": "nnp.documents.nativeEvent Phase B rejects stale identity type",
+    "method": "nnp.documents.nativeEvent",
+    "part": "params",
+    "valid": false,
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": "1",
+      "subscriptionId": "subscription",
+      "eventSeq": 1,
+      "type": "activeChanged",
+      "document": null
+    }
+  },
+  {
+    "name": "owned resource disposal event",
+    "method": "nnp.resources.nativeEvent",
+    "part": "params",
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "resourceId": "style",
+      "type": "disposed"
+    },
+    "valid": true
+  },
+  {
+    "name": "owned resource disposal rejects wrong event kind",
+    "method": "nnp.resources.nativeEvent",
+    "part": "params",
+    "value": {
+      "sessionId": "fixture-session",
+      "generation": 1,
+      "resourceId": "style",
+      "type": "created"
+    },
+    "valid": false
+  }
+]
