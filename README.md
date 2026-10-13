@@ -15,19 +15,9 @@ The application implements the native services and owns plugin processes, permis
 | Run an HTML/JS service | [HTML service](docs/HtmlService.zh-CN.md), `html-service` template |
 | Restore panels after updates | [Hot update lifecycle](docs/HotUpdate.zh-CN.md) |
 | Maintain releases | [Marketplace](docs/Marketplace.zh-CN.md), [repository boundaries](docs/RepositoryLayout.zh-CN.md) |
-| Maintain an existing API 0.1 plugin | [Legacy API reference](docs/API.zh-CN.md) |
+| API reference | [Legacy API reference](docs/API.zh-CN.md) |
 
 ## Install the kit
-
-SDK 0.3.0 is currently the Phase B development candidate. Before its Release is published, clone this branch and use its local generator:
-
-```sh
-git clone --branch codex/sdk-phase-b https://github.com/KMerdan/notepadnext-plugin-sdk.git
-cd notepadnext-plugin-sdk
-node create.cjs ../my-inspector --template text-inspector --id yourname.text-inspector
-```
-
-After the immutable 0.3.0 Release is published, install its tarball:
 
 GitHub Releases provide an npm-format tarball and `sdk-checksums.json`; this package is not on the npm registry. Install an exact URL and commit your lockfile:
 
@@ -41,11 +31,11 @@ npm test
 npm run package -- ../my-tools-package
 ```
 
-Templates: `hello`, `markdown`, `html-service`, `text-tools`. Generated projects retain an exact SDK snapshot for offline portability. The Marketplace instead consumes the released tarball directly; it carries no copy of SDK source.
+Templates: `hello`, `markdown`, `html-service`, `text-tools`, `text-inspector`, `todo-navigator`. Generated projects retain an exact SDK snapshot for offline portability. The Marketplace instead consumes the released tarball directly; it carries no copy of SDK source.
 
-API 0.2 plugins import types from `@notepadnext/plugin-sdk/native` and declare `engines.api: ^0.2.0`. The root type export preserves API 0.1's positional command callbacks for existing Markdown/HTML plugins. SDK package version, host API profile, application and plugin versions are separate. Phase B methods require API 0.3 and declared grants; [the guide](docs/PhaseB.zh-CN.md) describes their limits. Deferred encoding/macros/providers remain outside the public API.
+Plugins import types from `@notepadnext/plugin-sdk/native` and declare `engines.api: ^0.3.0`. The root export and `/native` export expose the same current 0.3 API. Command handlers receive `CommandInvocation`. SDK package version, host API profile, application and plugin versions are separate. Phase B methods require API 0.3 and declared grants; [the guide](docs/PhaseB.zh-CN.md) describes their limits. Deferred encoding/macros/providers remain outside the public API.
 
-Native plugins use `activate(context)`; the host supplies runtime objects. Capabilities restrict host RPC access; trusted Node plugins can still use Node filesystem/network APIs. This is not an operating-system sandbox. The retained [VS Code importer experiment](experimental/README.md) is optional historical tooling, outside the native SDK architecture.
+Native plugins use `activate(context)`; the host supplies runtime objects. Capabilities restrict host RPC access; trusted Node plugins can still use Node filesystem/network APIs. This is not an operating-system sandbox.
 
 ## Develop and verify the SDK
 

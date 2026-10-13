@@ -92,21 +92,3 @@ test('release rejects mismatched tags, unstable versions and incomplete builds w
   assert.equal((await fs.readdir(path.dirname(output))).filter(name=>name.startsWith('.nnp-release-')).length,0);
   await assert.rejects(release(source,path.join(source,'release')),/outside/);
 });
-test('Python release vendors built modules without imports, bytecode or npm hooks',async t=> {
-  const {source,output,write}=await fixture(t);
-  await write('notepadnext-plugin.json',{manifestVersion:1,id:'tests.sample',version:'1.0.0',list:false,runtime:{kind:'python',entry:'dist/index.py'}});
-  await write('package.json',{name:'sample',version:'1.0.0',scripts:{postinstall:'touch sentinel'}});
-  await write('dist/index.py',"raise RuntimeError('pack must never import Python code')\n");
-  await write('dist/helper.py','value = 42\n');
-  const result=await release(source,output,'v1.0.0');assert.equal(result.assets.length,1);
-  const checksums=JSON.parse(await fs.readFile(path.join(output,'notepadnext-plugin-checksums.json'),'utf8'));
-  assert.equal(checksums.pluginId,'tests.sample');await assert.rejects(fs.lstat(path.join(source,'sentinel')),{code:'ENOENT'});
-  await assert.rejects(fs.lstat(path.join(source,'dist/__pycache__')),{code:'ENOENT'});
-});
-test('Python packages reject npm runtime dependencies and remove failed staging',async t=> {
-  const {source,output,write}=await fixture(t);
-  await write('notepadnext-plugin.json',{manifestVersion:1,id:'tests.sample',version:'1.0.0',list:false,runtime:{kind:'python',entry:'dist/index.py'}});
-  await write('dist/index.py','pass\n');
-  await assert.rejects(pack(source,output),/Python packages/);await assert.rejects(fs.lstat(output),{code:'ENOENT'});
-  assert.equal((await fs.readdir(path.dirname(output))).filter(name=>name.startsWith('.nnp-package-')).length,0);
-});

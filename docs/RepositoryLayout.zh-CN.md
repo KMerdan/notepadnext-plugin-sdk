@@ -8,7 +8,7 @@
 
 SDK 源码只在独立仓库维护。主应用通过 submodule 引用经过测试的 commit，并将规范 Schema 快照同步入应用；安装的 host 不加载整个 SDK。Marketplace 通过固定 Release URL 和 npm lockfile integrity 引用开发依赖，构建包只携带必要 runtime helper。作者生成的模板可保留离线 SDK 快照。
 
-SDK 0.2.1 同时提供 legacy API 0.1 类型和 native API 0.2 类型。manifest API range 决定会话协商；已有 `^0.1.0` 包保留旧回调签名，`^0.2.0` 包收到固定目标 invocation。wire profile 仍为 0.1（JSON-RPC 2.0）；应用/SDK/插件/catalog 版本独立。
+SDK 0.2.1 同时提供 legacy API 0.1 类型和 native API 0.3 类型。manifest API range 决定会话协商；已有 `^0.3.0` 包保留旧回调签名，`^0.3.0` 包收到固定目标 invocation。wire profile 仍为 0.1（JSON-RPC 2.0）；应用/SDK/插件/catalog 版本独立。
 
 VS Code importer 的历史实验位于 `experimental`；其 static configuration parser 不进入原生 SDK 客户端依赖。应用中历史 adapter 自带该实验契约。原生插件的目标是增强现有 Notepad Next ++，可以参考和移植其他编辑器插件源码，但不承诺通用 VS Code API/runtime 兼容。
 

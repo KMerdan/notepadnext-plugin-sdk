@@ -6,7 +6,7 @@ const {createTestHost}=require('./testing.cjs');
 const {portable}=require('./pack.cjs');
 function parseArguments(args) {
   const directory=args.shift(),options={};
-  if(!directory||directory.startsWith('--'))throw new Error('Usage: nnp-debug <project> --input <markdown-file> --output <html-file> [--command <id>] [--api-version 0.1.0|0.2.0|0.3.0] [--watch]');
+  if(!directory||directory.startsWith('--'))throw new Error('Usage: nnp-debug <project> --input <markdown-file> --output <html-file> [--command <id>] [--api-version 0.3.0] [--watch]');
   while(args.length) {
     const flag=args.shift();
     if(flag==='--watch'&&!options.watch){options.watch=true;continue;}
@@ -15,10 +15,10 @@ function parseArguments(args) {
     options[key]=args.shift();
   }
   if(!options.input||!options.output)throw new Error('--input and --output are required.');
-  if(options.apiVersion!==undefined&&!['0.1.0','0.2.0','0.3.0'].includes(options.apiVersion))throw new Error('--api-version must be 0.1.0, 0.2.0 or 0.3.0.');
+  if(options.apiVersion!==undefined&&options.apiVersion!=='0.3.0')throw new Error('--api-version must be 0.3.0.');
   return {directory,options};
 }
-async function runDebug(directory,{input,output,command,watch=false,apiVersion='0.1.0'}) {
+async function runDebug(directory,{input,output,command,watch=false,apiVersion='0.3.0'}) {
   directory=await fs.realpath(directory);input=path.resolve(input);output=path.resolve(output);
   if(output===input||output===path.join(directory,'notepadnext-plugin.json')||output===path.join(directory,'package.json'))throw new Error('Choose a separate HTML output file.');
   const manifest=JSON.parse(await fs.readFile(path.join(directory,'notepadnext-plugin.json'),'utf8'));
@@ -99,7 +99,7 @@ async function runDebug(directory,{input,output,command,watch=false,apiVersion='
 }
 module.exports={runDebug,parseArguments};
 if(require.main===module) {
-  if(process.argv.includes('--help'))console.log('Usage: nnp-debug <project> --input <markdown-file> --output <html-file> [--command <id>] [--api-version 0.1.0|0.2.0|0.3.0] [--watch]\nExecutes your built CommonJS plugin using the SDK simulated host. Run Node with --inspect-brk=127.0.0.1:9229 for breakpoints.');
+  if(process.argv.includes('--help'))console.log('Usage: nnp-debug <project> --input <markdown-file> --output <html-file> [--command <id>] [--api-version 0.3.0] [--watch]\nExecutes your built CommonJS plugin using the SDK simulated host. Run Node with --inspect-brk=127.0.0.1:9229 for breakpoints.');
   else {
     try {
       if(Number(process.versions.node.split('.')[0])!==24)throw new Error('Use Node 24 for this SDK.');

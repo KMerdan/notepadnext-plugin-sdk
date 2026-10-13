@@ -77,8 +77,7 @@ async function pack(source,output) {
       if(typeof command.icon!=='string'||command.icon.length>iconProfile.maxLength||!new RegExp(iconProfile.pattern).test(command.icon)||!portable(command.icon))
         throw new Error('Command icons must use package-relative PNG paths supported by the metadata profile.');
     }
-    if(metadata.manifestVersion!==1||metadata.list!==false||!['node','python'].includes(metadata.runtime?.kind))throw new Error('Expected one native Node or Python plugin.');
-    if(metadata.runtime.kind==='python'&&(Object.keys(info.dependencies||{}).length||Object.keys(info.optionalDependencies||{}).length))throw new Error('Python packages must vendor modules in dist/ and cannot declare npm runtime dependencies.');
+    if(metadata.manifestVersion!==1||metadata.list!==false||metadata.runtime?.kind!=='node')throw new Error('Expected one native Node plugin.');
     if(metadata.version!==info.version)throw new Error('Package and plugin versions differ.');
     const entry=metadata.runtime.entry;
     if(!portable(entry)||!entry.startsWith('dist/'))throw new Error('Release entry must be a built file inside dist/.');

@@ -32,7 +32,6 @@
     "pack.cjs",
     "archive.cjs",
     "release.cjs",
-    "import-vscode.cjs",
     "templates",
     "schemas",
     "docs",
@@ -40,19 +39,18 @@
     "LICENSE",
     "local-service.cjs",
     "local-service.d.ts",
-    "experimental",
-    "native.d.ts"
+    "native.d.ts",
+    "base.d.ts"
   ],
   "bin": {
     "nnp-create": "create.cjs",
     "nnp-debug": "debug.cjs",
     "nnp-package": "pack.cjs",
     "nnp-archive": "archive.cjs",
-    "nnp-release": "release.cjs",
-    "nnp-import-vscode": "import-vscode.cjs"
+    "nnp-release": "release.cjs"
   },
   "scripts": {
-    "test": "node --test pack.test.cjs developer.test.cjs local-service.test.cjs importer.test.cjs",
+    "test": "node --test pack.test.cjs developer.test.cjs local-service.test.cjs",
     "test:standalone": "node tests/standalone.cjs build/standalone-validation",
     "release:kit": "node tools/release-sdk.cjs"
   },

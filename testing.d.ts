@@ -32,5 +32,4 @@ export interface NativeTestHost extends Omit<TestHost,'context'|'activate'> {
   readonly context:NativeContext;
   activate(plugin:NativeModule):Promise<void>;
 }
-export function createTestHost(options:TestHostOptions & {apiVersion:'0.2.0'|'0.3.0'}):NativeTestHost;
-export function createTestHost(options?:TestHostOptions & {apiVersion?:'0.1.0'}):TestHost;
+export function createTestHost(options?:TestHostOptions & {apiVersion?:'0.3.0'}):NativeTestHost;

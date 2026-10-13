@@ -1,7 +1,6 @@
-/** Native editor API. Phase B methods require engines.api: ^0.3.0.
- * Existing Phase A methods remain available to API 0.2; legacy 0.1 types live at the package root. */
-import type { PluginContext as LegacyContext, DocumentInfo as BaseInfo, TextSnapshot, TextEdit, Position, Disposable } from './index';
-export type { Position, TextEdit, Disposable } from './index';
+/** Native editor API 0.3. Declare engines.api: ^0.3.0. */
+import type { BasePluginContext as BaseContext, DocumentInfo as BaseInfo, TextSnapshot, TextEdit, Position, Disposable } from './base';
+export type { Position, TextEdit, Disposable } from './base';
 export type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 export interface CallOptions { signal?: AbortSignal; timeout?: number; }
 export interface PluginError extends Error { code: number; kind: string; data?: Json; outcome?: 'notCommitted' | 'unknown'; }
@@ -51,15 +50,15 @@ export interface HostInfo {
   product: 'Notepad Next ++'; applicationVersion: string; apiVersion: string; platform: 'macos' | 'windows' | 'linux'; capabilities: readonly string[];
   limits: Readonly<{maxSnapshotUtf8Bytes: number; maxEditsPerTransaction: 256; maxPanelStateBytes: 65536}>;
   supports(capability: string): boolean;
-  /** API 0.3 only. Separate negotiated limits leave the legacy initialize profile intact. */
+  /** API 0.3 only. Bounded native service limits. */
   getNativeLimits(options?:CallOptions):Promise<NativeLimits>;
 }
-export interface PluginContext extends Omit<LegacyContext, 'commands' | 'documents'> {
+export interface PluginContext extends Omit<BaseContext, 'commands' | 'documents'> {
   readonly stopping: AbortSignal;
   readonly host: HostInfo;
   readonly log: { debug(message:string,details?:Json):void; info(message:string,details?:Json):void; warn(message:string,details?:Json):void; error(message:string,details?:Json):void; };
   readonly commands: {register(id:string,callback:(invocation:CommandInvocation)=>unknown|Promise<unknown>):Promise<Disposable>};
-  readonly documents: Omit<LegacyContext['documents'], 'applyEdits'> & {
+  readonly documents: Omit<BaseContext['documents'], 'applyEdits'> & {
     list(options?:CallOptions):Promise<DocumentInfo[]>;
     getInfo(id:string,options?:CallOptions):Promise<DocumentInfo>;
     readRange(id:string,expectedVersion:number,range:Range,options?:CallOptions & {maxBytes?:number}):Promise<RangeRead>;
@@ -90,9 +89,9 @@ export interface PluginContext extends Omit<LegacyContext, 'commands' | 'documen
   readonly languages: {list(options?:CallOptions):Promise<Array<{id:string;name:string}>>;getKeywords(id:string,options?:CallOptions):Promise<string[]>;set(id:string,expectedVersion:number,languageId:string,options?:CallOptions):Promise<DocumentInfo>};
   readonly bookmarks: {list(id:string,options?:CallOptions):Promise<BookmarkState>;set(id:string,expectedVersion:number,lines:number[],marked:boolean,options?:CallOptions):Promise<BookmarkState>};
   readonly decorations: {create(id:string,options:{style:'highlight'|'underline';color:string},callOptions?:CallOptions):Promise<Decoration>};
-  readonly webviews: LegacyContext['webviews'] & {
+  readonly webviews: BaseContext['webviews'] & {
     /** Qt >=6.6, webviews@1 + webviews.html@1. Host allocates the ID, default dock is right. */
-    createHtml(options:{viewType:string;title:string;enableScripts:boolean;resourceRoots?:string[]},listener?:Parameters<LegacyContext['webviews']['createCompatible']>[1]):ReturnType<LegacyContext['webviews']['createCompatible']>;
+    createHtml(options:{viewType:string;title:string;enableScripts:boolean;resourceRoots?:string[]},listener?:Parameters<BaseContext['webviews']['createCompatible']>[1]):ReturnType<BaseContext['webviews']['createCompatible']>;
   };
 }
 export interface PluginModule {activate(context:PluginContext):void|Promise<void>;deactivate?():void|Promise<void>;}

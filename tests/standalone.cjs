@@ -92,11 +92,6 @@ async function main() {
     await run(label+'-package',[npm,'run','package','--',path.join(artifacts,template+'-0.1.0')],project);
     if(template==='text-inspector') {await run(label+'-debug',[npm,'run','debug'],project);assert.match(await fs.readFile(path.join(project,'.debug/preview.html'),'utf8'),/Text Inspector/);}
   }
-  const fixture=path.join(root,'built-vscode');await fs.mkdir(path.join(fixture,'out'),{recursive:true});
-  await fs.writeFile(path.join(fixture,'package.json'),JSON.stringify({name:'hello',publisher:'demo',version:'1.0.0',engines:{vscode:'^1.80.0'},main:'./out/extension.js',contributes:{commands:[{command:'hello.open',title:'Hello'}],configuration:{properties:{'hello.greeting':{type:'string',default:'Hi'}}}}}));
-  await fs.writeFile(path.join(fixture,'out/extension.js'),"exports.activate=()=>{throw new Error('import must never run code');};");await fs.writeFile(path.join(fixture,'LICENSE'),'MIT test fixture');
-  await run('23-standalone-vscode-import',[path.join(tooling,'node_modules/@notepadnext/plugin-sdk/import-vscode.cjs'),fixture,path.join(root,'imported-vscode'),'--configuration'],tooling);
-  assert.equal(JSON.parse(await fs.readFile(path.join(root,'imported-vscode/notepadnext-plugin.json'),'utf8')).id,'demo.hello');
   const record={sdk:{version:packed.version,path:path.join(sdkOutput,packed.filename),sha256:crypto.createHash('sha256').update(await fs.readFile(path.join(sdkOutput,packed.filename))).digest('hex'),files:files.size},markdownProject:markdown,helloProject:hello,htmlProject:html,localPackage:path.join(artifacts,'markdown-preview-0.1.0'),zip:checksum.assets[0],steps,notes:['SDK installed from its actual npm tarball; template moved before dependency installation.','Locked install, build, tests, local debug and packaging use only the standalone project.','Editor integration is a separate native check; no publication or signing performed.']};
   await fs.writeFile(path.join(root,'validation.json'),JSON.stringify(record,null,2)+'\n');
   console.log(JSON.stringify(record,null,2));
