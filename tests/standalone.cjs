@@ -83,6 +83,15 @@ async function main() {
   await run('29-native-debug',[npm,'run','debug'],native);
   assert.match(await fs.readFile(path.join(native,'.debug/preview.html'),'utf8'),/<pre>HELLO 😀中文<\/pre>/);
   await run('28-native-package',[npm,'run','package','--',path.join(artifacts,'text-tools-0.1.0')],native);
+  for(const template of ['text-inspector','todo-navigator']) {
+    const project=path.join(root,template),label='phase-b-'+template;
+    await run(label+'-create',[create,project,'--template',template,'--id','demo.'+template],tooling);
+    await run(label+'-install',[npm,'install',...npmOptions],project);
+    await run(label+'-build',[npm,'run','build'],project);
+    await run(label+'-test',[npm,'test'],project);
+    await run(label+'-package',[npm,'run','package','--',path.join(artifacts,template+'-0.1.0')],project);
+    if(template==='text-inspector') {await run(label+'-debug',[npm,'run','debug'],project);assert.match(await fs.readFile(path.join(project,'.debug/preview.html'),'utf8'),/Text Inspector/);}
+  }
   const fixture=path.join(root,'built-vscode');await fs.mkdir(path.join(fixture,'out'),{recursive:true});
   await fs.writeFile(path.join(fixture,'package.json'),JSON.stringify({name:'hello',publisher:'demo',version:'1.0.0',engines:{vscode:'^1.80.0'},main:'./out/extension.js',contributes:{commands:[{command:'hello.open',title:'Hello'}],configuration:{properties:{'hello.greeting':{type:'string',default:'Hi'}}}}}));
   await fs.writeFile(path.join(fixture,'out/extension.js'),"exports.activate=()=>{throw new Error('import must never run code');};");await fs.writeFile(path.join(fixture,'LICENSE'),'MIT test fixture');

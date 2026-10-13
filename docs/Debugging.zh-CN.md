@@ -6,11 +6,13 @@
 
 在 VS Code 启动 **SDK simulated host**，或运行 `npm run debug:break` 并 Attach。source maps 已开启，可以在 TypeScript 源码打断点。调试器仅监听本机；停止时调用 deactivation。这个调试器运行在作者自己的进程中，不接管已安装插件进程。
 
-测试可以从 `@notepadnext/plugin-sdk/testing` 导入 `createTestHost()`。模板测试演示 activate、invoke、setDocument、面板关闭重开和 dispose。单文档测试宿主支持 commands、messages、普通 Webview、文档快照/事件和内存 storage/configuration。applyEdits、watchAll、兼容 Webview 和资源映射会明确报 unsupported。它不模拟 native 句柄、权限、CSP、RPC 编码、真实持久化、配额或 OS 沙箱。
+测试可以从 `@notepadnext/plugin-sdk/testing` 导入 `createTestHost()`。模板测试演示 activate、invoke、setDocument、面板关闭重开和 dispose。单文档测试宿主支持 commands、messages、普通 Webview、文档快照/事件和内存 storage/configuration。原子 edits 和基础选区/局部读取可用于插件逻辑测试；watchAll、原生搜索/文件/装饰、兼容 Webview 和资源映射不由模拟器证明。它不模拟 native 句柄、权限、CSP、RPC 编码、真实持久化、配额或 OS 沙箱。
 
 ## 真实编辑器
 
 构建 → 本地打包 → 注册资源 → 显式安装 → 启用 → 运行。在 Installed 中使用 **Inspect** 和 **Logs** 查看入口、运行状态与日志。console.info/warn/error 由宿主收集；不要在日志中打印凭据或大段文档内容。
+
+Text Inspector 支持 API 0.3 模拟调试；TODO Navigator 的原生搜索、高亮与 HTML 面板要在真实编辑器中验证，模板的 npm test 只测试业务组合。当前工具不会给已安装进程开启 Node inspector。需要调试进程时使用已有原生日志/宿主调试构建，不把模拟器结果当成真实 Qt 验收。
 
 真实编辑器使用已安装的不可变包副本。More → Reload 会重启该副本；它不会读取作者目录新编译的 dist。改源码后提高版本、重新打包、刷新 Sources 并 Update；完整步骤见 [Markdown 演示](MarkdownWalkthrough.zh-CN.md)。
 

@@ -1,0 +1,61 @@
+{
+  "manifestVersion": 1,
+  "id": "__PLUGIN_ID__",
+  "name": "Text Inspector",
+  "version": "0.1.0",
+  "list": false,
+  "description": "Inspect and navigate selected editor text.",
+  "engines": {
+    "notepadnext": ">=0.15.0 <0.16.0",
+    "api": "^0.3.0"
+  },
+  "runtime": {
+    "kind": "node",
+    "entry": "dist/index.js"
+  },
+  "capabilities": {
+    "required": [
+      "commands@1",
+      "messages@1",
+      "documents.read@1",
+      "documents.native.events@1",
+      "editors.selection.read@1",
+      "editors.view.write@1",
+      "webviews@1",
+      "webviews.restore@1",
+      "editors.selection.events@1"
+    ],
+    "optional": []
+  },
+  "activationEvents": [
+    "onCommand:__PLUGIN_ID__.show",
+    "onCommand:__PLUGIN_ID__.reveal"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "id": "__PLUGIN_ID__.show",
+        "title": "Open Text Inspector",
+        "icon": "dist/media/icon.png"
+      },
+      {
+        "id": "__PLUGIN_ID__.reveal",
+        "title": "Reveal inspected selection",
+        "icon": "dist/media/icon.png"
+      }
+    ],
+    "menus": [
+      {
+        "location": "plugins",
+        "command": "__PLUGIN_ID__.show",
+        "order": 110
+      },
+      {
+        "location": "plugins",
+        "command": "__PLUGIN_ID__.reveal",
+        "order": 111
+      }
+    ]
+  },
+  "icon": "dist/media/icon.png"
+}
