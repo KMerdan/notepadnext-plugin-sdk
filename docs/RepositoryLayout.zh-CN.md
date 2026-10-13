@@ -3,7 +3,7 @@
 | 仓库 | 维护内容 | 版本/依赖 |
 | --- | --- | --- |
 | `KMerdan/notepad-next-plus-plus` | Qt/Scintilla 功能、原生操作、RPC 实现、Node host、管理器、热更新与真实集成验证 | 应用版本；SDK submodule 固定 commit |
-| `KMerdan/notepadnext-plugin-sdk` | 原生 API 0.3 类型、metadata/wire Schema、模板、调试/模拟测试、HTTP service helper、打包和文档 | SDK 0.3.1；Git tag 和 npm-format `.tgz` |
+| `KMerdan/notepadnext-plugin-sdk` | 原生 API 0.3 类型、metadata/wire Schema、模板、调试/模拟测试、HTTP service helper、打包和文档 | SDK 0.3.2；Git tag 和 npm-format `.tgz` |
 | `KMerdan/notepadnext-plugin-marketplace` | 第一方插件源码、目录、独立 lockfile 与 Release | 各插件 `<plugin-id>/v<version>` |
 
 SDK 源码只在独立仓库维护。主应用通过 submodule 引用经过测试的 commit，并将规范 Schema 快照同步入应用；安装的 host 不加载整个 SDK。Marketplace 通过固定 Release URL 和 npm lockfile integrity 引用开发依赖，构建包只携带必要 runtime helper。作者生成的模板可保留离线 SDK 快照。

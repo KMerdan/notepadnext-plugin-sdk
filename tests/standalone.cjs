@@ -41,7 +41,7 @@ async function main() {
   await run('04-markdown-install',[npm,'install',...npmOptions],markdown);
   await run('05-markdown-locked-install',[npm,'ci',...npmOptions],markdown);
   const typecheck=path.join(markdown,'sdk-typecheck.ts');
-  await fs.writeFile(typecheck,"import {createTestHost} from '@notepadnext/plugin-sdk/testing';\nimport type {PluginContext} from '@notepadnext/plugin-sdk';\nconst host=createTestHost({text:'# typed',onRender(panel){const html:string=panel.html;void html;}});\nconst context:PluginContext=host.context;void context;\n// @ts-expect-error text must be a string\ncreateTestHost({text:42});\n");
+  await fs.writeFile(typecheck,"import {createTestHost} from '@notepadnext/plugin-sdk/testing';\nimport type {PluginContext} from '@notepadnext/plugin-sdk';\nimport type {DocumentInfo as NativeDocumentInfo} from '@notepadnext/plugin-sdk/native';\nconst fileEncoding:NativeDocumentInfo['encoding']='windows-1252';void fileEncoding;\n// @ts-expect-error encoding is a charset name\nconst invalidEncoding:NativeDocumentInfo['encoding']=42;void invalidEncoding;\nconst host=createTestHost({text:'# typed',onRender(panel){const html:string=panel.html;void html;}});\nconst context:PluginContext=host.context;void context;\n// @ts-expect-error text must be a string\ncreateTestHost({text:42});\n");
   await run('05a-sdk-typecheck',[path.join(markdown,'node_modules/typescript/bin/tsc'),'--noEmit','--strict','--target','ES2022','--module','CommonJS','--moduleResolution','Node',typecheck],markdown);
   await fs.unlink(typecheck);
   await run('06-markdown-build',[npm,'run','build'],markdown);

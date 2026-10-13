@@ -1,6 +1,6 @@
 {
   "name": "@notepadnext/plugin-sdk",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Notepad Next ++ plugin SDK: types, contracts, templates, debugging and packaging",
   "types": "index.d.ts",
   "exports": {

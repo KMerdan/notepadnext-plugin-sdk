@@ -7,7 +7,7 @@
 将 SDK tgz 放到开发目录，解包后执行：
 
 ```sh
-tar -xzf notepadnext-plugin-sdk-0.3.1.tgz
+tar -xzf notepadnext-plugin-sdk-0.3.2.tgz
 node ./package/create.cjs ./markdown-demo --template markdown --id demo.markdown-preview --name "Markdown Preview Demo"
 cd markdown-demo
 npm install --ignore-scripts
@@ -94,7 +94,7 @@ npm run bundle -- ../artifacts/markdown-preview-0.1.1-zip v0.1.1
 
 | 文件 | 消费者 |
 | --- | --- |
-| `notepadnext-plugin-sdk-0.3.1.tgz` | 插件开发者；模板、SDK 与文档 |
+| `notepadnext-plugin-sdk-0.3.2.tgz` | 插件开发者；模板、SDK 与文档 |
 | `notepadnext-plugin.json` | Plugin Manager 资源注册 |
 | `artifacts/markdown-preview-0.1.1/` | 本地 Install / Update |
 | `notepadnext-plugin.zip` 与 checksums | GitHub Release 安装下载 |

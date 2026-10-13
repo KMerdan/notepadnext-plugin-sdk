@@ -6,7 +6,7 @@ export interface CallOptions { signal?: AbortSignal; timeout?: number; }
 export interface PluginError extends Error { code: number; kind: string; data?: Json; outcome?: 'notCommitted' | 'unknown'; }
 export interface Range { start: Position; end: Position; }
 export interface DocumentInfo extends BaseInfo {
-  name: string; lineEnding: 'lf' | 'crlf' | 'cr'; encoding: 'utf-8' | 'utf-16le' | 'utf-16be' | 'unknown';
+  name: string; lineEnding: 'lf' | 'crlf' | 'cr'; encoding: string;
   bom: boolean; byteLength: number; lineCount: number;
 }
 export interface EditorInfo { editorId: string; documentId: string; windowId: string; }
