@@ -10,12 +10,12 @@ The application implements the native services and owns plugin processes, permis
 | --- | --- |
 | Create a plugin | [Getting started](docs/GettingStarted.zh-CN.md) |
 | Use files, native search, bookmarks and owned highlights | [Native API 0.3](docs/PhaseB.zh-CN.md), `text-inspector` / `todo-navigator` templates |
-| Transform selections or call editor operations | [Native API 0.2](docs/NativeAPI.zh-CN.md), `text-tools` template |
+| Transform selections or call editor operations | [Native editing API 0.3](docs/NativeAPI.zh-CN.md), `text-tools` template |
 | Preview Markdown | [Development → debug → package → install](docs/MarkdownWalkthrough.zh-CN.md) |
 | Run an HTML/JS service | [HTML service](docs/HtmlService.zh-CN.md), `html-service` template |
 | Restore panels after updates | [Hot update lifecycle](docs/HotUpdate.zh-CN.md) |
 | Maintain releases | [Marketplace](docs/Marketplace.zh-CN.md), [repository boundaries](docs/RepositoryLayout.zh-CN.md) |
-| API reference | [Legacy API reference](docs/API.zh-CN.md) |
+| API reference | [Current API reference](docs/API.zh-CN.md) |
 
 ## Install the kit
 

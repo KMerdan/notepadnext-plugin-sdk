@@ -1,6 +1,6 @@
 # Native API 0.3：编辑增强插件
 
-Phase B 在已有文档、选区、命令和面板契约上增加原生能力。使用 `@notepadnext/plugin-sdk/native`，manifest 声明 `engines.api: ^0.3.0`，并声明所调用的 required/optional capabilities。旧 API 0.1/0.2 插件保留原调用方式；Python prototype 仍使用 0.1。
+Phase B 在已有文档、选区、命令和面板契约上增加原生能力。使用 `@notepadnext/plugin-sdk/native`，manifest 声明 `engines.api: ^0.3.0`，并声明所调用的 required/optional capabilities。SDK 只维护这一原生 API；根入口和 `/native` 入口提供相同类型，命令回调统一使用 `CommandInvocation`。
 
 | 服务 | 方法 | 主要 capability |
 | --- | --- | --- |
@@ -14,13 +14,13 @@ Phase B 在已有文档、选区、命令和面板契约上增加原生能力。
 | 插件装饰 | `create` → `set` / `dispose` | `decorations.write@1` |
 | 更多原生命令 | `core.execute` 的行操作、显式注释、缩进和按级折叠 | `core.commands@1` + document/view write |
 
-正式签名见 [native.d.ts](../native.d.ts)，请求/结果以 [wire schema](../schemas/wire.schema.json) 为准。JSON-RPC 与 wire profile 保持原版本；新增读取/搜索/装饰预算通过 `getNativeLimits` 查询，不修改旧 initialize limits。
+正式签名见 [native.d.ts](../native.d.ts)，请求/结果以 [wire schema](../schemas/wire.schema.json) 为准。JSON-RPC 与 wire profile 保持原版本；新增读取/搜索/装饰预算通过 `getNativeLimits` 查询，独立于 initialize 中的基础 limits。
 
 ## 范围、事件和目标
 
 范围始终是 UTF-16、零起点、end exclusive。`readRange(documentId, expectedVersion, range)` 真正读取局部正文，默认最多 256 KiB；位置所在单行的映射预算也为 256 KiB。可读取大文件的小范围，超预算拒绝。原有全文 snapshot 和 applyEdits 的 2 MiB 预检边界保留。
 
-`watchNative` 返回订阅时的 documents/editors/eventSeq，之后通知丰富 metadata、正文失效、打开/关闭/激活、保存、重载和书签变化。`watchSelections(editorId, listener)` 返回初始 selection 和 sequence，之后通知该视图的选区、reset 和关闭。两者都需要 `documents.read@1`；都是 Disposable。通知可合并为最终状态，`reset` 要重新读取；它们不替代旧 delta stream，也不保证每次击键对应一次通知。
+`watchNative` 返回订阅时的 documents/editors/eventSeq，之后通知丰富 metadata、正文失效、打开/关闭/激活、保存、重载和书签变化。`watchSelections(editorId, listener)` 返回初始 selection 和 sequence，之后通知该视图的选区、reset 和关闭。两者都需要 `documents.read@1`；都是 Disposable。通知可合并为最终状态，`reset` 要重新读取；它们与正文 delta stream 分工不同，也不保证每次击键对应一次通知。
 
 从 command invocation 的 editorId/documentId 发起操作；await 后不要重新取当前编辑器作为写入目标。`revealRange` 展开折叠并滚动，不改变选区或输入焦点。`activate` 的聚焦行为显式控制。选区修改仍使用 `setSelections` 的 document version 和 revision。
 

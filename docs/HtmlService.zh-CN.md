@@ -1,6 +1,6 @@
 # 本地 Node.js HTML 服务插件
 
-首版 HTML Preview 使用插件自身的 Node 24 进程启动 HTTP 服务。页面能执行 HTML/JS、加载 CSS、fetch 自己服务的 API，也能通过 acquireNotepadNextApi 的 state/message 桥（旧宿主使用同实例的 acquireVsCodeApi 别名）与插件交互。模板包含 HTML 编辑区、运行按钮、计数器和服务 PID；可以从当前 HTML 编辑器读取包含未保存修改的内容。
+首版 HTML Preview 使用插件自身的 Node 24 进程启动 HTTP 服务。页面能执行 HTML/JS、加载 CSS、fetch 自己服务的 API，也能通过 acquireNotepadNextApi 的 state/message 桥与插件交互。模板包含 HTML 编辑区、运行按钮、计数器和服务 PID；可以从当前 HTML 编辑器读取包含未保存修改的内容。
 
 ```sh
 node package/create.cjs ./html-demo --template html-service --id author.html-preview

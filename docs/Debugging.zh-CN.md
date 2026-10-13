@@ -6,7 +6,7 @@
 
 在 VS Code 启动 **SDK simulated host**，或运行 `npm run debug:break` 并 Attach。source maps 已开启，可以在 TypeScript 源码打断点。调试器仅监听本机；停止时调用 deactivation。这个调试器运行在作者自己的进程中，不接管已安装插件进程。
 
-测试可以从 `@notepadnext/plugin-sdk/testing` 导入 `createTestHost()`。模板测试演示 activate、invoke、setDocument、面板关闭重开和 dispose。单文档测试宿主支持 commands、messages、普通 Webview、文档快照/事件和内存 storage/configuration。原子 edits 和基础选区/局部读取可用于插件逻辑测试；watchAll、原生搜索/文件/装饰、兼容 Webview 和资源映射不由模拟器证明。它不模拟 native 句柄、权限、CSP、RPC 编码、真实持久化、配额或 OS 沙箱。
+测试可以从 `@notepadnext/plugin-sdk/testing` 导入 `createTestHost()`。模板测试演示 activate、invoke、setDocument、面板关闭重开和 dispose。单文档测试宿主支持 commands、messages、普通 Webview、文档快照/事件和内存 storage/configuration。原子 edits 和基础选区/局部读取可用于插件逻辑测试；watchAll、原生搜索/文件/装饰、完整 HTML Webview 和资源映射不由模拟器证明。它不模拟 native 句柄、权限、CSP、RPC 编码、真实持久化、配额或 OS 沙箱。
 
 ## 真实编辑器
 

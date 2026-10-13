@@ -1,6 +1,6 @@
 # 原生 API 0.3
 
-SDK 0.2.1 的原生入口为 `@notepadnext/plugin-sdk/native`。需要实现 API 0.3 的 Notepad Next ++ 构建；manifest 声明 `engines.api: ^0.3.0`。SDK 根入口仍是旧 API 0.1 类型，供已有 Markdown/HTML 包使用。两种命令回调不会混用。
+SDK 0.3.0 的根入口与 `@notepadnext/plugin-sdk/native` 提供相同的原生 API 0.3 类型。manifest 声明 `engines.api: ^0.3.0`，命令统一接收固定目标的 `CommandInvocation`。全部官方模板和 Marketplace 插件使用这一契约。
 
 ## 已实现的编辑基础
 
@@ -16,7 +16,7 @@ SDK 0.2.1 的原生入口为 `@notepadnext/plugin-sdk/native`。需要实现 API
 
 命令回调收到 `{commandId,windowId,editorId,documentId,args}`。目标在点击时捕获，包括异步包校验和首次激活之前。没有文档时两个 ID 为 null；关闭文档使其失效。`editors.capture(invocation)` 在 GUI 线程一次读取原目标正文、版本、选区 revision 和选中文本。切换标签页不改变目标。
 
-`getActive/getSnapshot/watch/watchAll` 保持旧事件和最小 metadata 格式；`getInfo/list/capture` 增加 name、lineEnding、encoding、bom、byteLength、lineCount。编码字段是已知文件表示，正文使用 UTF-8 buffer；不猜测不可解码的内容。
+`getActive/getSnapshot/watch/watchAll` 提供活动文档、快照与预览事件；`getInfo/list/capture` 提供 name、lineEnding、encoding、bom、byteLength、lineCount。编码字段是已知文件表示，正文使用 UTF-8 buffer；不猜测不可解码的内容。
 
 ## 选区变换
 
@@ -55,10 +55,10 @@ export async function activate(ctx:PluginContext) {
 
 ## 面板和停止
 
-`createHtml({viewType,title,enableScripts,resourceRoots})` 由 host 分配 panelId；完整 HTML/JS 使用包内资源、CSP、JSON state/message 桥。浏览器使用 `acquireNotepadNextApi()`；旧 `acquireVsCodeApi()` 是同一个实例的迁移别名。已有 fragment/service 与按 viewType 注册的 restorer 沿用通用热更新流程，不回放 Open 命令。
+`createHtml({viewType,title,enableScripts,resourceRoots})` 由 host 分配 panelId；完整 HTML/JS 使用包内资源、CSP、JSON state/message 桥。浏览器使用 `acquireNotepadNextApi()`。fragment/service 与按 viewType 注册的 restorer 沿用通用热更新流程，不回放 Open 命令。
 
 `ctx.stopping` 在 deactivate 前 abort。SDK 自动释放 owned resources；自建 timer/请求仍需插件清理或绑定 signal。`ctx.log` 输出至受限插件 stderr 日志。`host.supports` 仅查询已协商的 grant；不意味任意 OS 权限。
 
-文件保存/关闭、搜索、语言、书签、装饰、导出、宏及 providers 是后续 B/C 范围，当前不在 native types 中。Python prototype 保持 API 0.1；0.2 的首批作者入口为 TS/JS。单宿主窗口，没有 shared-buffer 克隆视图承诺。原生完整验收由应用仓库承担；模拟 test host 支持 selection transform，但明确拒绝 core/native renderer 模拟。
+文件生命周期、字面量搜索、语言、书签和会话高亮已实现，见 [Phase B](PhaseB.zh-CN.md)。编码转换、宏、providers 与导出仍未开放。单宿主窗口，没有 shared-buffer 克隆视图承诺。原生完整验收由应用仓库承担；模拟 test host 支持 selection transform，但明确拒绝 core/native renderer 模拟。
 
-text-tools 的 `npm run debug/dev/debug:break` 显式传 `--api-version 0.3.0`，模拟 debugger 提供固定 invocation 并将转换后的正文输出到 HTML。默认 debugger 仍使用 0.1；自建 native 项目需要同一选项。core、选择不同子范围和浏览器渲染仍需 native 验证。
+text-tools 的 `npm run debug/dev/debug:break` 显式传 `--api-version 0.3.0`，模拟 debugger 提供固定 invocation 并将转换后的正文输出到 HTML。默认 debugger 使用同一 API 0.3；自建项目也可显式声明这一版本。core、选择不同子范围和浏览器渲染仍需 native 验证。

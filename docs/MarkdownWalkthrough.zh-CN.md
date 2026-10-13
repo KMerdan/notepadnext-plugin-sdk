@@ -1,13 +1,13 @@
 # Markdown 插件完整开发流程
 
-以下流程从独立 SDK 开发包开始，生成 `demo.markdown-preview`，避免与内置的 `notepadnext.markdown-preview` 冲突。示例命令以终端当前开发目录为基准；输出路径必须是新路径。
+以下流程从独立 SDK 开发包开始，生成 `demo.markdown-preview`，避免与 Marketplace 的 `kmerdan.markdown-preview` 冲突。示例命令以终端当前开发目录为基准；输出路径必须是新路径。
 
 ## 1. 创建独立项目
 
 将 SDK tgz 放到开发目录，解包后执行：
 
 ```sh
-tar -xzf notepadnext-plugin-sdk-0.1.0.tgz
+tar -xzf notepadnext-plugin-sdk-0.3.0.tgz
 node ./package/create.cjs ./markdown-demo --template markdown --id demo.markdown-preview --name "Markdown Preview Demo"
 cd markdown-demo
 npm install --ignore-scripts
@@ -57,7 +57,7 @@ npm run package -- ../artifacts/markdown-preview-0.1.0
 
 ## 4. 注册、安装与真实编辑器调试
 
-1. 在 NotepadNext 打开 **Plugins → Plugin Manager… → Add Source…**。
+1. 在 Notepad Next ++ 打开 **Plugins → Plugin Manager… → Add Source…**。
 2. 选择 **Local metadata file**，浏览到项目 `markdown-demo/notepadnext-plugin.json`，确认注册。注册后它出现在 **Discover**。
 3. 选中 **Markdown Preview Demo**，点击蓝色 **Install Local Package…**，选择刚生成的 `artifacts/markdown-preview-0.1.0` 目录，确认安装。
 4. 在 **Installed** 启用插件，点击 **Open Markdown Preview**，或通过 Plugins 菜单 / 工具栏打开。
@@ -94,7 +94,7 @@ npm run bundle -- ../artifacts/markdown-preview-0.1.1-zip v0.1.1
 
 | 文件 | 消费者 |
 | --- | --- |
-| `notepadnext-plugin-sdk-0.1.0.tgz` | 插件开发者；模板、SDK 与文档 |
+| `notepadnext-plugin-sdk-0.3.0.tgz` | 插件开发者；模板、SDK 与文档 |
 | `notepadnext-plugin.json` | Plugin Manager 资源注册 |
 | `artifacts/markdown-preview-0.1.1/` | 本地 Install / Update |
 | `notepadnext-plugin.zip` 与 checksums | GitHub Release 安装下载 |
