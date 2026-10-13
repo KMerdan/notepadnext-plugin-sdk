@@ -19,6 +19,16 @@ The application implements the native services and owns plugin processes, permis
 
 ## Install the kit
 
+SDK 0.3.0 is currently the Phase B development candidate. Before its Release is published, clone this branch and use its local generator:
+
+```sh
+git clone --branch codex/sdk-phase-b https://github.com/KMerdan/notepadnext-plugin-sdk.git
+cd notepadnext-plugin-sdk
+node create.cjs ../my-inspector --template text-inspector --id yourname.text-inspector
+```
+
+After the immutable 0.3.0 Release is published, install its tarball:
+
 GitHub Releases provide an npm-format tarball and `sdk-checksums.json`; this package is not on the npm registry. Install an exact URL and commit your lockfile:
 
 ```sh

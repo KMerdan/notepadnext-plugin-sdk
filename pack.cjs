@@ -70,7 +70,9 @@ async function pack(source,output) {
   }
   try {
     const metadata=await json(path.join(source,'notepadnext-plugin.json')),info=await json(path.join(source,'package.json'));
-    const iconProfile=require('./schemas/manifest.schema.json').$defs.iconPath;
+    const manifestProfile=require('./schemas/manifest.schema.json');
+    for(const key of Object.keys(metadata))if(!Object.hasOwn(manifestProfile.properties,key))throw new Error('Unknown registration metadata field: '+key);
+    const iconProfile=manifestProfile.$defs.iconPath;
     for(const command of metadata.contributes?.commands||[])if(command.icon!==undefined) {
       if(typeof command.icon!=='string'||command.icon.length>iconProfile.maxLength||!new RegExp(iconProfile.pattern).test(command.icon)||!portable(command.icon))
         throw new Error('Command icons must use package-relative PNG paths supported by the metadata profile.');
